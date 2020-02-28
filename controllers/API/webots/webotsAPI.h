@@ -1,100 +1,311 @@
+// ------------------------------------------------------------------------------
+// ! \file webotsAPI.h
+// ! declares the webots API
+//
+// ------------------------------------------------------------------------------
+
 #ifndef WEBOTSAPI_H
 #define WEBOTSAPI_H
 
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
-
-#define DEBUG 0
-
+#include <webots/camera.h>
+#include <webots/distance_sensor.h>
+#include <webots/emitter.h>
+#include <webots/led.h>
+#include <webots/motor.h>
+#include <webots/receiver.h>
 #include <webots/robot.h>
-#define TIME_STEP 64
 
-void init_robot();
-void init_sensors();
-void disable_sensors();
-int get_robot_ID();
+#define DEBUG                 0      // !< set to 1 to enter debug mode, leave at 0 otherwise
 
-void cleanup_robot();
+#define TIME_STEP             64     // !< number of milliseconds to compute per simulation step
 
-int robot_go_on();
+#define MAX_SPEED             6.0    // !< maximum speed of the robot
+#define NORM_SPEED            2.0    // !< normal speed of the robot
+
+#define LED_COUNT             4      // !< number of LEDs on the robot
+
+#define PROX_SENSORS_COUNT    8      // !< number of proximity sensors on the robot
+#define NBR_CALIB             50     // !< number of used readings for calibration
+#define OFFSET_CALIB          5      // !< start evaluating data for calibration after this many dummy readings
+
+#define PROX_RIGHT_FRONT      0      // !< index of the front right proximity sensor
+#define PROX_RIGHT_FRONT_DIAG 1      // !< index of the front right diagonal proximity sensor
+#define PROX_RIGHT_SIDE       2      // !< index of the right side proximity sensor
+#define PROX_RIGHT_BACK       3      // !< index of the back right proximity sensor
+#define PROX_LEFT_BACK        4      // !< index of the back left proximity sensor
+#define PROX_LEFT_SIDE        5      // !< index of the left side proximity sensor
+#define PROX_LEFT_FRONT_DIAG  6      // !< index of the front left diagonal proximity sensor
+#define PROX_LEFT_FRONT       7      // !< index of the front left proximity sensor
+#define MAX_PROX              200    // !< maximum value of a proximity sensor
+
+#define GROUND_SENSORS_COUNT  3      // !< number of ground sensors
+#define GS_LEFT               0      // !< index of the left ground sensor
+#define GS_CENTER             1      // !< index of the central ground sensor
+#define GS_RIGHT              2      // !< index of the right ground sensor
+
+#define CAM_RATE              8      // !< framerate of the camera
+#define CAMERA_WIDTH          160    // !< horizontal pixel count of the camera
+#define CAMERA_HEIGHT         120    // !< vertical pixel count of the camera
+
+#define COM_CHANNEL           1      // !< communication channel index
+#define MSG_NONE              "ZZZZ" // !< dummy message
+#define MSG_LENGTH            4      // !< byte lnegth of the message
+
+WbDeviceTag  left_motor;             // !< left motor
+WbDeviceTag  right_motor;            // !< right motor
+
+const char * led_names[LED_COUNT]
+  = {"led1", "led3", "led5", "led7"}; // !< led names
+WbDeviceTag  led_tags[LED_COUNT];     // !< Webots led link
+
+const char * prox_sensors_names[PROX_SENSORS_COUNT]
+  = {"ps0", "ps1", "ps2", "ps3", "ps4", "ps5", "ps6", "ps7"}; // !< proximity sensor names
+WbDeviceTag  prox_sensor_tags[PROX_SENSORS_COUNT];            // !< proximity sensor webots link
+double       prox_corr_vals[PROX_SENSORS_COUNT];              // !< proximity sensor correction values
+
+const char * ground_sensors_names[GROUND_SENSORS_COUNT]
+  = {"gs0", "gs1", "gs2"};                             // !< ground sensor names
+WbDeviceTag  ground_sensor_tags[GROUND_SENSORS_COUNT]; // !< ground sensor webots link
+
+WbDeviceTag  cam;                                      // !< camera webots link
+
+WbDeviceTag  emitter;                                  // !< emitter webots link
+WbDeviceTag  receiver;                                 // !< receiver webots link
 
 /*** ROBOT CONTROL start ***/
-#include <webots/motor.h>
-#define MAX_SPEED 6.0
-#define NORM_SPEED 2.0
-#include <webots/led.h>
-#define LED_COUNT 4
 
-void set_speed(double left, double right);
+/**
+ *  Initialise the motors
+ *
+ *  \return void
+ **/
+void   init_motor();
+
+/**
+ *  set the speed of the robot
+ *
+ *  \param left the speed of the left wheel
+ *  \param right the speed of the right wheel
+ *  \return void
+ **/
+void   set_speed(double left, double right);
+
+/**
+ *  return a bounded version of the input speed
+ *
+ *  \param speed the unbounded speed
+ *  \return the speed [-MAX_SPEED..+MAX_SPEED]
+ **/
 double bounded_speed(double speed);
-
-void toggle_led(int led_position);
-void disable_led(int led_position);
-void enable_led(int led_position);
 
 /*** ROBOT CONTROL end ***/
 
+/*** LEDs start ***/
+/**
+ *  initiliase the LEDs on the robot
+ *
+ *  \return void
+ **/
+void init_led();
 
-/*** PROXIMITY SENSORS start ***/
-#include <webots/distance_sensor.h>
-#define PROX_SENSORS_COUNT 8
-#define NBR_CALIB 50
-#define OFFSET_CALIB 5
+/**
+ *  toggle a given LED on the robot
+ *
+ *  \param led_position the index of the LED to toggle
+ *  \return void
+ **/
+void toggle_led(int led_position);
 
-#define PROX_RIGHT_FRONT 0
-#define PROX_RIGHT_FRONT_DIAG 1
-#define PROX_RIGHT_SIDE 2
-#define PROX_RIGHT_BACK 3
-#define PROX_LEFT_BACK 4
-#define PROX_LEFT_SIDE 5
-#define PROX_LEFT_FRONT_DIAG 6
-#define PROX_LEFT_FRONT 7
+/**
+ *  turn a given LED on
+ *
+ *  \param led_position the index of the LED to turn on
+ *  \return void
+ **/
+void enable_led(int led_position);
 
-#define MAX_PROX 200
+/**
+ *  turn a given LED off
+ *
+ *  \param led_position the index of the LED to turn off
+ *  \return void
+ **/
+void disable_led(int led_position);
 
+/*** LEDs end ***/
+
+/*** IR SENSORS start ***/
+
+/**
+ *  Initialise proximity sensors
+ *
+ *  \return void
+ **/
+void init_prox();
+
+/**
+ *  get the raw proximity sensor data
+ *
+ *  \param prox_values pointer to the array holding the  data
+ *  \return void
+ **/
 void get_prox(short int *prox_values);
+
+/**
+ *  get the calibrated proximity sensor data
+ *
+ *  \param prox_values pointer to the array holding the data
+ *  \return void
+ **/
 void get_prox_calibrated(short int *prox_values);
+
+/**
+ *  calibrate the proximity sensors
+ *
+ *  \return void
+ **/
 void calibrate_prox();
-/*** PROXIMITY SENSORS end ***/
 
+/**
+ *  Disable proximity sensors
+ *
+ *  \return void
+ **/
+void disable_prox();
 
-/*** GROUND SENSORS start ***/
-#define GROUND_SENSORS_COUNT 3
-#define GS_LEFT 0
-#define GS_CENTER 1
-#define GS_RIGHT 2
+/**
+ *  Initialise ground sensors
+ *
+ *  \return void
+ **/
+void init_ground();
 
+/**
+ *  get ground sensor data
+ *
+ *  \param ground_values pointer to the array holding the data
+ *  \return void
+ **/
 void get_ground(short int *ground_values);
-/*** GROUND SENSORS end ***/
 
+/**
+ *  Disable ground sensors
+ *
+ *  \return void
+ **/
+void disable_ground();
+
+/*** IR SENSORS end ***/
 
 /*** CAMERA start ***/
-#include <webots/camera.h>
-#define CAM_RATE 8
-#define CAMERA_WIDTH 160
-#define CAMERA_HEIGHT 120
 
+/**
+ *  initiliase and enable the camera
+ *
+ *  \return void
+ **/
+void init_camera();
+
+/**
+ *  disable the camera
+ *
+ *  \return void
+ **/
+void disable_camera();
+
+/**
+ *  get an image from the camera
+ *
+ *  \param red pointer to the array holding the red channel data
+ *  \param green pointer to the array holding the green channel data
+ *  \param blue pointer to the array holding the blue channel data
+ *  \return void
+ **/
 void get_camera(unsigned char *red, unsigned char *green, unsigned char *blue);
 
-void init_camera();
-void disable_camera();
 /*** CAMERA end ***/
 
 /*** COMMUNICATION start ***/
-#include <webots/emitter.h>
-#include <webots/receiver.h>
 
-#define COM_CHANNEL 1
-#define MSG_NONE "ZZZZ"
-
-#define MSG_LENGTH 4
-
+/**
+ *  initiliase and enable communication
+ *
+ *  \return void
+ **/
 void init_communication();
+
+/**
+ *  disable communication
+ *
+ *  \return void
+ **/
 void disable_communication();
+
+/**
+ *  send a message to the controller
+ *
+ *  \param snd pointer to the char array holding the data to send
+ *  \return void
+ **/
 void send_msg(const char *snd);
+
+/**
+ *  receive a message from the controller
+ *
+ *  \param rcv pointer to the char array holding the received data
+ *  \return void
+ **/
 void receive_msg(char *rcv);
 
+/**
+ *  get the ID of the robot
+ *
+ *  \return the ID of the robot
+ **/
+int  get_robot_ID();
+
 /*** COMMUNICATION end ***/
+
+/*** ROBOT HANDLING start ***/
+
+/**
+ *  initialise the motors on the robot
+ *
+ *  \return void
+ **/
+void init_robot();
+
+/**
+ *  send the commands in the output buffer and receive the data from the sensors
+ *
+ *  \return always returns 1
+ **/
+int  robot_go_on();
+
+/**
+ *  clean up the robot
+ *
+ *  \return void
+ **/
+void cleanup_robot();
+
+/**
+ *  initialise the sensors
+ *
+ *  \return void
+ **/
+void init_sensors();
+
+/**
+ *  disable the sensors
+ *
+ *  \return void
+ **/
+void disable_sensors();
+
+/*** ROBOT HANDLING end ***/
 
 #endif // WEBOTSAPI_H
