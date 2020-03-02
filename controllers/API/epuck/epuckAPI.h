@@ -22,94 +22,89 @@
 
 #include <string.h>
 
-#define DEBUG                 0                              // !< set to 1 to enter debug mode, leave at 0 otherwise
+#define DEBUG                 0                                     // !< set to 1 to enter debug mode, leave at 0 otherwise
 
-#define MAX_SPEED             1000                           // !< maximum speed of the robot
-#define NORM_SPEED            400                            // !< normal speed of the robot
-#define LED_COUNT             4                              // !< number of LEDs on the robot
+#define MAX_SPEED             1000                                  // !< maximum speed of the robot
+#define NORM_SPEED            400                                   // !< normal speed of the robot
+#define LED_COUNT             4                                     // !< number of LEDs on the robot
 
-#define PROX_SENSORS_COUNT    8                              // !< number of proximity sensors on the robot
-#define NBR_CALIB             50                             // !< number of used readings for calibration
-#define OFFSET_CALIB          5                              // !< start evaluating data for calibration after this many dummy readings
+#define PROX_SENSORS_COUNT    8                                     // !< number of proximity sensors on the robot
+#define NBR_CALIB             50                                    // !< number of used readings for calibration
+#define OFFSET_CALIB          5                                     // !< start evaluating data for calibration after this many dummy readings
 
-#define PROX_RIGHT_FRONT      0                              // !< index of the front right proximity sensor
-#define PROX_RIGHT_FRONT_DIAG 1                              // !< index of the front right diagonal proximity sensor
-#define PROX_RIGHT_SIDE       2                              // !< index of the right side proximity sensor
-#define PROX_RIGHT_BACK       3                              // !< index of the back right proximity sensor
-#define PROX_LEFT_BACK        4                              // !< index of the back left proximity sensor
-#define PROX_LEFT_SIDE        5                              // !< index of the left side proximity sensor
-#define PROX_LEFT_FRONT_DIAG  6                              // !< index of the front left diagonal proximity sensor
-#define PROX_LEFT_FRONT       7                              // !< index of the front left proximity sensor
+#define PROX_RIGHT_FRONT      0                                     // !< index of the front right proximity sensor
+#define PROX_RIGHT_FRONT_DIAG 1                                     // !< index of the front right diagonal proximity sensor
+#define PROX_RIGHT_SIDE       2                                     // !< index of the right side proximity sensor
+#define PROX_RIGHT_BACK       3                                     // !< index of the back right proximity sensor
+#define PROX_LEFT_BACK        4                                     // !< index of the back left proximity sensor
+#define PROX_LEFT_SIDE        5                                     // !< index of the left side proximity sensor
+#define PROX_LEFT_FRONT_DIAG  6                                     // !< index of the front left diagonal proximity sensor
+#define PROX_LEFT_FRONT       7                                     // !< index of the front left proximity sensor
 
-#define MAX_PROX              200                            // !< maximum value of a proximity sensor
+#define MAX_PROX              200                                   // !< maximum value of a proximity sensor
 
-#define GROUND_SENSORS_COUNT  3                              // !< number of ground sensors
-#define GS_LEFT               0                              // !< index of the left ground sensor
-#define GS_CENTER             1                              // !< index of the central ground sensor
-#define GS_RIGHT              2                              // !< index of the right ground sensor
+#define GROUND_SENSORS_COUNT  3                                     // !< number of ground sensors
+#define GS_LEFT               0                                     // !< index of the left ground sensor
+#define GS_CENTER             1                                     // !< index of the central ground sensor
+#define GS_RIGHT              2                                     // !< index of the right ground sensor
 
-#define CAMERA_WIDTH          160                            // !< horizontal pixel count of the camera
-#define CAMERA_HEIGHT         120                            // !< vertical pixel count of the camera
+#define CAMERA_WIDTH          160                                   // !< horizontal pixel count of the camera
+#define CAMERA_HEIGHT         120                                   // !< vertical pixel count of the camera
 
-#define TEMP_SENSOR_COUNT     1                              // !< number of temperature sensors
+#define TEMP_SENSOR_COUNT     1                                     // !< number of temperature sensors
 
-#define TOF_SENSOR_COUNT      1                              // !< number of Time of Flight sensors
+#define TOF_SENSOR_COUNT      1                                     // !< number of Time of Flight sensors
 
-#define AXES_X                0                              // !< index of the X axis
-#define AXES_Y                1                              // !< index of the y axis
-#define AXES_Z                2                              // !< index of the z axis
+#define AXES_X                0                                     // !< index of the X axis
+#define AXES_Y                1                                     // !< index of the y axis
+#define AXES_Z                2                                     // !< index of the z axis
 
-#define GYRO_SENSOR_COUNT     3                              // !< number of gyroscopic sensors
+#define GYRO_SENSOR_COUNT     3                                     // !< number of gyroscopic sensors
 
-#define ORIENT_SENSOR_COUNT   1                              // !< number of orientation sensors
+#define ORIENT_SENSOR_COUNT   1                                     // !< number of orientation sensors
 
-#define INCLIN_SENSOR_COUNT   1                              // !< number of incination sensors
+#define INCLIN_SENSOR_COUNT   1                                     // !< number of incination sensors
 
-#define ACC_SENSOR_COUNT      1                              // !< number of acceleration sensors
+#define ACC_SENSOR_COUNT      1                                     // !< number of acceleration sensors
 
-#define ACC_RAW_SENSOR_COUNT  3                              // !< number of raw acceleration sensors
+#define ACC_RAW_SENSOR_COUNT  3                                     // !< number of raw acceleration sensors
 
-#define MICROPHONE_COUNT      4                              // !< number of microphones
+#define MICROPHONE_COUNT      4                                     // !< number of microphones
 
-#define MICROPHONE_FRONT      0                              // !< index of the front facing microphone
-#define MICROPHONE_RIGHT      1                              // !< index of the right facing microphone
-#define MICROPHONE_BACK       2                              // !< index of the back facing microphone
-#define MICROPHONE_LEFT       3                              // !< index of the left facing microphone
+#define MICROPHONE_FRONT      0                                     // !< index of the front facing microphone
+#define MICROPHONE_RIGHT      1                                     // !< index of the right facing microphone
+#define MICROPHONE_BACK       2                                     // !< index of the back facing microphone
+#define MICROPHONE_LEFT       3                                     // !< index of the left facing microphone
 
-#define COM_CHANNEL           1                              // !< communication channel
-#define MSG_NONE              "ZZZZ"                         // !< dummy message
+#define COM_CHANNEL           1                                     // !< communication channel
+#define MSG_NONE              "ZZZZ"                                // !< dummy message
 
-#define MSG_LENGTH            4                              // !< length of a message
+#define MSG_LENGTH            4                                     // !< length of a message
 
-char *             ip;                                       // !< IP address of the robot
-unsigned char      command[21];                              // !< char array holding the commands sent to the robot
-unsigned char      sensor[104];                              // !< char array holding received sensor data
-unsigned char      rgb565[CAMERA_WIDTH * CAMERA_HEIGHT * 2]; // !< holds an image in rgb565
-unsigned char      bgr888[CAMERA_WIDTH * CAMERA_HEIGHT * 3]; // !< holds an image in bgr888
-int                camera_updated;                           // !< 1 if the camera has been updated
-struct sockaddr_in remote_addr;                              // !< remote address for communicating with the robot
-int                fd;                                       // !< TCP socket
-int                bytes_sent;                               // !< count of how many bytes were sent to the robot
-int                bytes_recv;                               // !< count of how many bytes were received from the robot
-unsigned char      header;                                   // !< holds the header of the data sent by the robot
-struct timeval     start_time;                               // !< not used atm
-struct timeval     curr_time;                                // !< not used atm
-int32_t            time_diff_us;                             // !< not used atm
-int32_t            refresh;                                  // !< not used atm
-uint16_t           num_packets;                              // !< not used atm
-short int          prox_corr[PROX_SENSORS_COUNT];            // !< correction values for the proximity sensors
-short int          light_corr[PROX_SENSORS_COUNT];           // !< correction values for the ambient sensors
-key_t              key;                                      // !< key for the ICP message queue
-int                msgid;                                    // !< holds an ICP message ID
-int                shmid;                                    // !< ICP shared memory ID
-int *              queues;                                   // !< holds the ICP message queues for all the robots
+extern char *             ip;                                       // !< IP address of the robot
+extern unsigned char      command[21];                              // !< char array holding the commands sent to the robot
+extern unsigned char      sensor[104];                              // !< char array holding received sensor data
+extern unsigned char      rgb565[CAMERA_WIDTH * CAMERA_HEIGHT * 2]; // !< holds an image in rgb565
+extern unsigned char      bgr888[CAMERA_WIDTH * CAMERA_HEIGHT * 3]; // !< holds an image in bgr888
+extern int                camera_updated;                           // !< 1 if the camera has been updated
+extern struct sockaddr_in remote_addr;                              // !< remote address for communicating with the robot
+extern int                fd;                                       // !< TCP socket
+extern int                bytes_sent;                               // !< count of how many bytes were sent to the robot
+extern int                bytes_recv;                               // !< count of how many bytes were received from the robot
+extern unsigned char      header;                                   // !< holds the header of the data sent by the robot
+extern struct timeval     start_time;                               // !< not used atm
+extern struct timeval     curr_time;                                // !< not used atm
+extern int32_t            time_diff_us;                             // !< not used atm
+extern int32_t            refresh;                                  // !< not used atm
+extern uint16_t           num_packets;                              // !< not used atm
+extern short int          prox_corr[PROX_SENSORS_COUNT];            // !< correction values for the proximity sensors
+extern short int          light_corr[PROX_SENSORS_COUNT];           // !< correction values for the ambient sensors
+extern key_t              key;                                      // !< key for the ICP message queue
+extern int                msgid;                                    // !< holds an ICP message ID
+extern int                shmid;                                    // !< ICP shared memory ID
+extern int *              queues;                                   // !< holds the ICP message queues for all the robots
 
-struct msg_buffer
-{
-  long mtype;
-  char text[MSG_LENGTH + 1];
-}
-message;// !< holds a message to be sent
+extern struct msg_buffer  message;                                  // !< holds a message to be sent
 
 /**
  *  initialise the robot

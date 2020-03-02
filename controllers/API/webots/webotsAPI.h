@@ -18,62 +18,59 @@
 #include <webots/receiver.h>
 #include <webots/robot.h>
 
-#define DEBUG                 0      // !< set to 1 to enter debug mode, leave at 0 otherwise
+#define DEBUG                 0                                 // !< set to 1 to enter debug mode, leave at 0 otherwise
 
-#define TIME_STEP             64     // !< number of milliseconds to compute per simulation step
+#define TIME_STEP             64                                // !< number of milliseconds to compute per simulation step
 
-#define MAX_SPEED             6.0    // !< maximum speed of the robot
-#define NORM_SPEED            2.0    // !< normal speed of the robot
+#define MAX_SPEED             6.0                               // !< maximum speed of the robot
+#define NORM_SPEED            2.0                               // !< normal speed of the robot
 
-#define LED_COUNT             4      // !< number of LEDs on the robot
+#define LED_COUNT             4                                 // !< number of LEDs on the robot
 
-#define PROX_SENSORS_COUNT    8      // !< number of proximity sensors on the robot
-#define NBR_CALIB             50     // !< number of used readings for calibration
-#define OFFSET_CALIB          5      // !< start evaluating data for calibration after this many dummy readings
+#define PROX_SENSORS_COUNT    8                                 // !< number of proximity sensors on the robot
+#define NBR_CALIB             50                                // !< number of used readings for calibration
+#define OFFSET_CALIB          5                                 // !< start evaluating data for calibration after this many dummy readings
 
-#define PROX_RIGHT_FRONT      0      // !< index of the front right proximity sensor
-#define PROX_RIGHT_FRONT_DIAG 1      // !< index of the front right diagonal proximity sensor
-#define PROX_RIGHT_SIDE       2      // !< index of the right side proximity sensor
-#define PROX_RIGHT_BACK       3      // !< index of the back right proximity sensor
-#define PROX_LEFT_BACK        4      // !< index of the back left proximity sensor
-#define PROX_LEFT_SIDE        5      // !< index of the left side proximity sensor
-#define PROX_LEFT_FRONT_DIAG  6      // !< index of the front left diagonal proximity sensor
-#define PROX_LEFT_FRONT       7      // !< index of the front left proximity sensor
-#define MAX_PROX              200    // !< maximum value of a proximity sensor
+#define PROX_RIGHT_FRONT      0                                 // !< index of the front right proximity sensor
+#define PROX_RIGHT_FRONT_DIAG 1                                 // !< index of the front right diagonal proximity sensor
+#define PROX_RIGHT_SIDE       2                                 // !< index of the right side proximity sensor
+#define PROX_RIGHT_BACK       3                                 // !< index of the back right proximity sensor
+#define PROX_LEFT_BACK        4                                 // !< index of the back left proximity sensor
+#define PROX_LEFT_SIDE        5                                 // !< index of the left side proximity sensor
+#define PROX_LEFT_FRONT_DIAG  6                                 // !< index of the front left diagonal proximity sensor
+#define PROX_LEFT_FRONT       7                                 // !< index of the front left proximity sensor
+#define MAX_PROX              200                               // !< maximum value of a proximity sensor
 
-#define GROUND_SENSORS_COUNT  3      // !< number of ground sensors
-#define GS_LEFT               0      // !< index of the left ground sensor
-#define GS_CENTER             1      // !< index of the central ground sensor
-#define GS_RIGHT              2      // !< index of the right ground sensor
+#define GROUND_SENSORS_COUNT  3                                 // !< number of ground sensors
+#define GS_LEFT               0                                 // !< index of the left ground sensor
+#define GS_CENTER             1                                 // !< index of the central ground sensor
+#define GS_RIGHT              2                                 // !< index of the right ground sensor
 
-#define CAM_RATE              8      // !< framerate of the camera
-#define CAMERA_WIDTH          160    // !< horizontal pixel count of the camera
-#define CAMERA_HEIGHT         120    // !< vertical pixel count of the camera
+#define CAM_RATE              8                                 // !< framerate of the camera
+#define CAMERA_WIDTH          160                               // !< horizontal pixel count of the camera
+#define CAMERA_HEIGHT         120                               // !< vertical pixel count of the camera
 
-#define COM_CHANNEL           1      // !< communication channel index
-#define MSG_NONE              "ZZZZ" // !< dummy message
-#define MSG_LENGTH            4      // !< byte lnegth of the message
+#define COM_CHANNEL           1                                 // !< communication channel index
+#define MSG_NONE              "ZZZZ"                            // !< dummy message
+#define MSG_LENGTH            4                                 // !< byte lnegth of the message
 
-WbDeviceTag  left_motor;             // !< left motor
-WbDeviceTag  right_motor;            // !< right motor
+extern WbDeviceTag  left_motor;                                 // !< left motor
+extern WbDeviceTag  right_motor;                                // !< right motor
 
-const char * led_names[LED_COUNT]
-  = {"led1", "led3", "led5", "led7"}; // !< led names
-WbDeviceTag  led_tags[LED_COUNT];     // !< Webots led link
+extern const char * led_names[LED_COUNT];                       // !< led names
+extern WbDeviceTag  led_tags[LED_COUNT];                        // !< Webots led link
 
-const char * prox_sensors_names[PROX_SENSORS_COUNT]
-  = {"ps0", "ps1", "ps2", "ps3", "ps4", "ps5", "ps6", "ps7"}; // !< proximity sensor names
-WbDeviceTag  prox_sensor_tags[PROX_SENSORS_COUNT];            // !< proximity sensor webots link
-double       prox_corr_vals[PROX_SENSORS_COUNT];              // !< proximity sensor correction values
+extern const char * prox_sensors_names[PROX_SENSORS_COUNT];     // !< proximity sensor names
+extern WbDeviceTag  prox_sensor_tags[PROX_SENSORS_COUNT];       // !< proximity sensor webots link
+extern double       prox_corr_vals[PROX_SENSORS_COUNT];         // !< proximity sensor correction values
 
-const char * ground_sensors_names[GROUND_SENSORS_COUNT]
-  = {"gs0", "gs1", "gs2"};                             // !< ground sensor names
-WbDeviceTag  ground_sensor_tags[GROUND_SENSORS_COUNT]; // !< ground sensor webots link
+extern const char * ground_sensors_names[GROUND_SENSORS_COUNT]; // !< ground sensor names
+extern WbDeviceTag  ground_sensor_tags[GROUND_SENSORS_COUNT];   // !< ground sensor webots link
 
-WbDeviceTag  cam;                                      // !< camera webots link
+extern WbDeviceTag  cam;                                        // !< camera webots link
 
-WbDeviceTag  emitter;                                  // !< emitter webots link
-WbDeviceTag  receiver;                                 // !< receiver webots link
+extern WbDeviceTag  emitter;                                    // !< emitter webots link
+extern WbDeviceTag  receiver;                                   // !< receiver webots link
 
 /*** ROBOT CONTROL start ***/
 

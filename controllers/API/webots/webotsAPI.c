@@ -1,5 +1,25 @@
 #include "webotsAPI.h"
 
+WbDeviceTag  left_motor;             // !< left motor
+WbDeviceTag  right_motor;            // !< right motor
+
+const char * led_names[LED_COUNT]
+  = {"led1", "led3", "led5", "led7"}; // !< led names
+WbDeviceTag  led_tags[LED_COUNT];     // !< Webots led link
+
+const char * prox_sensors_names[PROX_SENSORS_COUNT]
+  = {"ps0", "ps1", "ps2", "ps3", "ps4", "ps5", "ps6", "ps7"}; // !< proximity sensor names
+WbDeviceTag  prox_sensor_tags[PROX_SENSORS_COUNT];            // !< proximity sensor webots link
+double       prox_corr_vals[PROX_SENSORS_COUNT];              // !< proximity sensor correction values
+
+const char * ground_sensors_names[GROUND_SENSORS_COUNT]
+  = {"gs0", "gs1", "gs2"};                             // !< ground sensor names
+WbDeviceTag  ground_sensor_tags[GROUND_SENSORS_COUNT]; // !< ground sensor webots link
+
+WbDeviceTag  cam;                                      // !< camera webots link
+
+WbDeviceTag  emitter;                                  // !< emitter webots link
+WbDeviceTag  receiver;                                 // !< receiver webots link
 ///////////////
 // ROBOT CONTROL
 
@@ -95,7 +115,7 @@ void calibrate_prox()
 
 void disable_prox()
 {
-  for (i = 0; i<PROX_SENSORS_COUNT; i++)
+  for (int i = 0; i<PROX_SENSORS_COUNT; i++)
   {
     prox_sensor_tags[i] = wb_robot_get_device(prox_sensors_names[i]);
     wb_distance_sensor_disable(prox_sensor_tags[i]);
@@ -122,7 +142,7 @@ void get_ground(short int *ground_values)
 
 void disable_ground()
 {
-  for (i = 0; i<GROUND_SENSORS_COUNT; i++)
+  for (int i = 0; i<GROUND_SENSORS_COUNT; i++)
   {
     ground_sensor_tags[i] = wb_robot_get_device(ground_sensors_names[i]);
     wb_distance_sensor_disable(ground_sensor_tags[i]);
