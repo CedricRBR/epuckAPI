@@ -1,5 +1,25 @@
 #include "webotsAPI.h"
 
+WbDeviceTag  left_motor;             // !< left motor
+WbDeviceTag  right_motor;            // !< right motor
+
+const char * led_names[LED_COUNT]
+  = {"led1", "led3", "led5", "led7"}; // !< led names
+WbDeviceTag  led_tags[LED_COUNT];     // !< Webots led link
+
+const char * prox_sensors_names[PROX_SENSORS_COUNT]
+  = {"ps0", "ps1", "ps2", "ps3", "ps4", "ps5", "ps6", "ps7"}; // !< proximity sensor names
+WbDeviceTag  prox_sensor_tags[PROX_SENSORS_COUNT];            // !< proximity sensor webots link
+double       prox_corr_vals[PROX_SENSORS_COUNT];              // !< proximity sensor correction values
+
+const char * ground_sensors_names[GROUND_SENSORS_COUNT]
+  = {"gs0", "gs1", "gs2"};                             // !< ground sensor names
+WbDeviceTag  ground_sensor_tags[GROUND_SENSORS_COUNT]; // !< ground sensor webots link
+
+WbDeviceTag  cam;                                      // !< camera webots link
+
+WbDeviceTag  emitter;                                  // !< emitter webots link
+WbDeviceTag  receiver;                                 // !< receiver webots link
 ///////////////
 // ROBOT CONTROL
 
@@ -111,6 +131,7 @@ void init_light()
 
 void calibrate_light()
 {
+<<<<<<< HEAD
   printf("no calibration in simulation: get_light_calibrated() is equivalent to get_light()\n");
 }
 
@@ -120,6 +141,9 @@ void get_light(short int *light_values)
 
   // printf("%f\n",wb_light_sensor_get_value(light_sensor_tags[3]));
   for (i = 0; i<PROX_SENSORS_COUNT; i++)
+=======
+  for (int i = 0; i<PROX_SENSORS_COUNT; i++)
+>>>>>>> Now defining global vars as extern in the header files as it should be.
   {
     light_values[i] = wb_light_sensor_get_value(light_sensor_tags[i]);
   }
