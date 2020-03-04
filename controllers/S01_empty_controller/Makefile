@@ -66,9 +66,9 @@
 ### VERBOSE = 1
 ###
 ###-----------------------------------------------------------------------------
-# here all .c files will be compiled + the corresponding library 
+# here all .c files will be compiled + the corresponding library
 # use "make API=epuck" to compile for the real robot
-ifeq ($(API),epuck) 
+ifeq ($(API),epuck)
   C_SOURCES = $(wildcard *.c) $(wildcard ../API/epuck/*.c)
 else
   C_SOURCES = $(wildcard *.c) $(wildcard ../API/webots/*.c)

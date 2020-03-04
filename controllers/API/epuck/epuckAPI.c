@@ -1,27 +1,27 @@
 #include "epuckAPI.h"
 
-char *             ip;                                       // !< IP address of the robot
-unsigned char      command[21];                              // !< char array holding the commands sent to the robot
-unsigned char      sensor[104];                              // !< char array holding received sensor data
-unsigned char      rgb565[CAMERA_WIDTH * CAMERA_HEIGHT * 2]; // !< holds an image in rgb565
-unsigned char      bgr888[CAMERA_WIDTH * CAMERA_HEIGHT * 3]; // !< holds an image in bgr888
-int                camera_updated;                           // !< 1 if the camera has been updated
-struct sockaddr_in remote_addr;                              // !< remote address for communicating with the robot
-int                fd;                                       // !< TCP socket
-int                bytes_sent;                               // !< count of how many bytes were sent to the robot
-int                bytes_recv;                               // !< count of how many bytes were received from the robot
-unsigned char      header;                                   // !< holds the header of the data sent by the robot
-struct timeval     start_time;                               // !< not used atm
-struct timeval     curr_time;                                // !< not used atm
-int32_t            time_diff_us;                             // !< not used atm
-int32_t            refresh;                                  // !< not used atm
-uint16_t           num_packets;                              // !< not used atm
-short int          prox_corr[PROX_SENSORS_COUNT];            // !< correction values for the proximity sensors
-short int          light_corr[PROX_SENSORS_COUNT];           // !< correction values for the ambient sensors
-key_t              key;                                      // !< key for the ICP message queue
-int                msgid;                                    // !< holds an ICP message ID
-int                shmid;                                    // !< ICP shared memory ID
-int *              queues;                                   // !< holds the ICP message queues for all the robots
+char *             ip;
+unsigned char      command[21];
+unsigned char      sensor[104];
+unsigned char      rgb565[CAMERA_WIDTH * CAMERA_HEIGHT * 2];
+unsigned char      bgr888[CAMERA_WIDTH * CAMERA_HEIGHT * 3];
+int                camera_updated;
+struct sockaddr_in remote_addr;
+int                fd;
+int                bytes_sent;
+int                bytes_recv;
+unsigned char      header;
+struct timeval     start_time;
+struct timeval     curr_time;
+int32_t            time_diff_us;
+int32_t            refresh;
+uint16_t           num_packets;
+short int          prox_corr[PROX_SENSORS_COUNT];
+short int          light_corr[PROX_SENSORS_COUNT];
+key_t              key;
+int                msgid;
+int                shmid;
+int *              queues;
 
 struct msg_buffer
 {

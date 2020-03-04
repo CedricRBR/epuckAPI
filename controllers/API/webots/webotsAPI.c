@@ -1,25 +1,25 @@
 #include "webotsAPI.h"
 
-WbDeviceTag  left_motor;             // !< left motor
-WbDeviceTag  right_motor;            // !< right motor
+WbDeviceTag  left_motor;
+WbDeviceTag  right_motor;
 
 const char * led_names[LED_COUNT]
-  = {"led1", "led3", "led5", "led7"}; // !< led names
-WbDeviceTag  led_tags[LED_COUNT];     // !< Webots led link
+  = {"led1", "led3", "led5", "led7"};
+WbDeviceTag  led_tags[LED_COUNT];
 
 const char * prox_sensors_names[PROX_SENSORS_COUNT]
-  = {"ps0", "ps1", "ps2", "ps3", "ps4", "ps5", "ps6", "ps7"}; // !< proximity sensor names
-WbDeviceTag  prox_sensor_tags[PROX_SENSORS_COUNT];            // !< proximity sensor webots link
-double       prox_corr_vals[PROX_SENSORS_COUNT];              // !< proximity sensor correction values
+  = {"ps0", "ps1", "ps2", "ps3", "ps4", "ps5", "ps6", "ps7"};
+WbDeviceTag  prox_sensor_tags[PROX_SENSORS_COUNT];
+double       prox_corr_vals[PROX_SENSORS_COUNT];
 
 const char * ground_sensors_names[GROUND_SENSORS_COUNT]
-  = {"gs0", "gs1", "gs2"};                             // !< ground sensor names
-WbDeviceTag  ground_sensor_tags[GROUND_SENSORS_COUNT]; // !< ground sensor webots link
+  = {"gs0", "gs1", "gs2"};
+WbDeviceTag  ground_sensor_tags[GROUND_SENSORS_COUNT];
 
-WbDeviceTag  cam;                                      // !< camera webots link
+WbDeviceTag  cam;
 
-WbDeviceTag  emitter;                                  // !< emitter webots link
-WbDeviceTag  receiver;                                 // !< receiver webots link
+WbDeviceTag  emitter;
+WbDeviceTag  receiver;
 ///////////////
 // ROBOT CONTROL
 
