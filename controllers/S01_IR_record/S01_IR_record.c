@@ -31,12 +31,12 @@ void robot_loop()
   }
 
   // write header in CSV file
-  fprintf(calib,   "time,");
-  fprintf(uncalib, "time,");
+  fprintf(calib,   "time");
+  fprintf(uncalib, "time");
   for (int i = 0; i<PROX_SENSORS_COUNT; i++)
   {
-    fprintf(calib,   "ps%d,", i);
-    fprintf(uncalib, "ps%d,", i);
+    fprintf(calib,   ",ps%d", i);
+    fprintf(uncalib, ",ps%d", i);
   }
 
   fprintf(calib,   "\n");
@@ -57,12 +57,12 @@ void robot_loop()
     get_prox_calibrated(IR_prox_calib);
 
     // write a line of data in each file
-    fprintf(calib,   "%d,", step);
-    fprintf(uncalib, "%d,", step);
+    fprintf(calib,   "%d", step);
+    fprintf(uncalib, "%d", step);
     for (int i = 0; i<PROX_SENSORS_COUNT; i++)
     {
-      fprintf(calib,   "%d,", IR_prox_calib[i]);
-      fprintf(uncalib, "%d,", IR_prox[i]);
+      fprintf(calib,   ",%d", IR_prox_calib[i]);
+      fprintf(uncalib, ",%d", IR_prox[i]);
     }
 
     fprintf(calib,   "\n");
