@@ -28,8 +28,9 @@ struct msg_buffer
   long mtype;
   char text[MSG_LENGTH + 1];
 }
-message;// !< holds a message to be sent
+message;
 
+// ------------------------------------------------------------------------------
 void print_command()
 {
   for (int k = 0; k < 21; ++k)
@@ -45,6 +46,7 @@ void print_command()
   printf("\n");
 }
 
+// ------------------------------------------------------------------------------
 void init_TCP(char *ipaddr)
 {
   // INIT TCP CONNECTION
@@ -72,6 +74,7 @@ void init_TCP(char *ipaddr)
   fprintf(stderr, "Connected to %s:%d (TCP)\n", inet_ntoa(remote_addr.sin_addr), htons(remote_addr.sin_port));
 } /* init_TCP */
 
+// ------------------------------------------------------------------------------
 void init_command()
 {
   // http://www.gctronic.com/doc/index.php?title=e-puck2_PC_side_development#WiFi_2
@@ -99,6 +102,7 @@ void init_command()
   command[20] = 0;    // speaker
 } /* init_command */
 
+// ------------------------------------------------------------------------------
 void init_camera()
 {
   printf("Camera enabled\n");
@@ -122,6 +126,7 @@ void init_camera()
     mkdir("./images", 0700);
 } /* init_camera */
 
+// ------------------------------------------------------------------------------
 void disable_camera()
 {
   printf("Camera disabled\n");
@@ -129,6 +134,7 @@ void disable_camera()
   command[1] = command[1] & 0xFE;
 }
 
+// ------------------------------------------------------------------------------
 void init_sensors()
 {
   // Force second to last bit to 1
@@ -139,18 +145,21 @@ void init_sensors()
   command[2] = 0; // do not calibrate on board, use API function
 }
 
+// ------------------------------------------------------------------------------
 void disable_sensors()
 {
   // Force second to last bit to 0
   command[1] = command[1] & 0xFD;
 }
 
+// ------------------------------------------------------------------------------
 void init_robot()
 {
   init_TCP(ip);
   init_command();
 }
 
+// ------------------------------------------------------------------------------
 void cleanup_robot()
 {
   disable_camera();
@@ -161,9 +170,9 @@ void cleanup_robot()
   }
 
   shutdown(fd, 2);
-  // close(fd);
 }
 
+// ------------------------------------------------------------------------------
 void send_command()
 {
   // print_command();
@@ -176,6 +185,7 @@ void send_command()
   command[2] = 0; // Stop proximity calibration.
 }
 
+// ------------------------------------------------------------------------------
 void receive_data()
 {
   bytes_recv = recv(fd, (char *)&header, 1, 0);
@@ -227,6 +237,7 @@ void receive_data()
   }
 } /* receive_data */
 
+// ------------------------------------------------------------------------------
 int robot_go_on()
 {
   send_command();
@@ -234,6 +245,37 @@ int robot_go_on()
   return 1;
 }
 
+// ------------------------------------------------------------------------------
+void set_steps_left(int steps_left)
+{
+  command[3] = steps_left & 0xFF; // left motor Least Significant Byte
+  command[4] = steps_left >> 8;   // left motor MSB
+}
+
+// ------------------------------------------------------------------------------
+void set_steps_right(int steps_right)
+{
+  command[5] = steps_right & 0xFF;  // right motor Least Significant Byte
+  command[6] = steps_right >> 8;    // right motor MSB
+}
+
+// ------------------------------------------------------------------------------
+void set_steps(int steps_left, int steps_right)
+{
+  if((command[1] & (1 << 2)) > 0)
+  {
+    set_steps_left(steps_left);
+    set_steps_right(steps_right);
+
+  }
+  else
+  {
+    printf("wheel mode is in speed mode. setting this could be dnagerous! aborting");
+    return;
+  }
+} /* set_steps_left */
+
+// ------------------------------------------------------------------------------
 void set_speed_left(int speed_left)
 {
   if(speed_left > MAX_SPEED || speed_left < -MAX_SPEED)
@@ -246,6 +288,7 @@ void set_speed_left(int speed_left)
   command[4] = speed_left >> 8;   // left motor MSB
 }
 
+// ------------------------------------------------------------------------------
 void set_speed_right(int speed_right)
 {
   if(speed_right > MAX_SPEED || speed_right < -MAX_SPEED)
@@ -258,23 +301,27 @@ void set_speed_right(int speed_right)
   command[6] = speed_right >> 8;    // right motor MSB
 }
 
+// ------------------------------------------------------------------------------
 void set_speed(double left, double right)
 {
   set_speed_left((int) left);
   set_speed_right((int) right);
 }
 
+// ------------------------------------------------------------------------------
 void   get_steps(short *left, short *right)
 {
   left[0]  = *(short int *)(&sensor[79]);
   right[0] = *(short int *)(&sensor[81]);
 }
 
+// ------------------------------------------------------------------------------
 double bounded_speed(double speed)
 {
   return (speed > MAX_SPEED) ? MAX_SPEED : (speed < -MAX_SPEED) ? -MAX_SPEED : speed;
 }
 
+// ------------------------------------------------------------------------------
 void toggle_led(int led_position)
 {
   if(led_position > 3 || led_position < 0)
@@ -283,10 +330,10 @@ void toggle_led(int led_position)
     return;
   }
 
-  // Shift 1 to the position of the current LED (binary representation), then bitwise XOR it with previous LEDs value
-  command[7] = command[7] ^ 1 << led_position;
+  command[7] ^= (1 << led_position);
 }
 
+// ------------------------------------------------------------------------------
 void enable_led(int led_position)
 {
   if(led_position > 3 || led_position < 0)
@@ -295,10 +342,10 @@ void enable_led(int led_position)
     return;
   }
 
-  // Shift 1 to the position of the current LED (binary representation), then bitwise OR it with current LEDs value
-  command[7] = command[7] | 1 << led_position;
+  command[7] |= (1 << led_position);
 }
 
+// ------------------------------------------------------------------------------
 void disable_led(int led_position)
 {
   if(led_position > 3 || led_position < 0)
@@ -307,43 +354,36 @@ void disable_led(int led_position)
     return;
   }
 
-  // Shift 0 to the position of the led, 1 otherwise. Then bitwise AND with previous value to force that one led to 0.
-  uint mask = ~(1 << led_position);
-  command[7] = command[7] & mask;
+  command[7] &= ~(1 << led_position);
 }
 
+// ------------------------------------------------------------------------------
 void enable_body_led(void)
 {
-
-  // Shift 1 to the position of the current LED (binary representation), then bitwise OR it with current LEDs value
-  command[7] = command[7] | 1 << 4;
+  command[7] |= (1 << 4);
 }
 
+// ------------------------------------------------------------------------------
 void disable_body_led(void)
 {
 
-  // Shift 0 to the position of the led, 1 otherwise. Then bitwise AND with previous value to force that one led to 0.
-  uint mask = ~(1 << 4);
-
-  command[7] = command[7] & mask;
+  command[7] &= ~(1 << 4);
 }
 
+// ------------------------------------------------------------------------------
 void enable_front_led(void)
 {
-
-  // Shift 1 to the position of the current LED (binary representation), then bitwise OR it with current LEDs value
-  command[7] = command[7] | 1 << 5;
+  command[7] |= (1 << 5);
 }
 
+// ------------------------------------------------------------------------------
 void disable_front_led(void)
 {
+  command[7] &= ~(1 << 5);
 
-  // Shift 0 to the position of the led, 1 otherwise. Then bitwise AND with previous value to force that one led to 0.
-  uint mask = ~(1 << 5);
-
-  command[7] = command[7] & mask;
 }
 
+// ------------------------------------------------------------------------------
 void calibrate_prox()
 {
   int       i, j;
@@ -391,6 +431,7 @@ void calibrate_prox()
   printf(" done calibration\n");
 } /* calibrate_prox */
 
+// ------------------------------------------------------------------------------
 void get_prox(short int *prox_values)
 {
   prox_values[PROX_RIGHT_FRONT]      = *(short int *)(&sensor[37]);
@@ -404,6 +445,7 @@ void get_prox(short int *prox_values)
   prox_values[PROX_LEFT_FRONT]       = *(short int *)(&sensor[51]);
 }
 
+// ------------------------------------------------------------------------------
 void get_prox_calibrated(short int *prox_values)
 {
   short int diff;
@@ -427,6 +469,7 @@ void get_prox_calibrated(short int *prox_values)
   prox_values[PROX_LEFT_FRONT]       = diff < 0 ? 0 : diff;
 } /* get_prox_calibrated */
 
+// ------------------------------------------------------------------------------
 void calibrate_light()
 {
   int       i, j;
@@ -474,6 +517,7 @@ void calibrate_light()
   printf(" done calibration\n");
 } /* calibrate_light */
 
+// ------------------------------------------------------------------------------
 void get_light(short int *light_values)
 {
   light_values[PROX_RIGHT_FRONT]      = *(short int *)(&sensor[53]);
@@ -487,6 +531,7 @@ void get_light(short int *light_values)
   light_values[PROX_LEFT_FRONT]       = *(short int *)(&sensor[67]);
 }
 
+// ------------------------------------------------------------------------------
 void get_light_calibrated(short int *light_values)
 {
   short int diff;
@@ -510,6 +555,7 @@ void get_light_calibrated(short int *light_values)
   light_values[PROX_LEFT_FRONT]       = diff < 0 ? 0 : diff;
 } /* get_light_calibrated */
 
+// ------------------------------------------------------------------------------
 void get_ground(short int *ground_values)
 {
   ground_values[GS_LEFT]   = *(short int *)(&sensor[90]);
@@ -517,6 +563,7 @@ void get_ground(short int *ground_values)
   ground_values[GS_RIGHT]  = *(short int *)(&sensor[94]);
 }
 
+// ------------------------------------------------------------------------------
 void rgb565_to_bgr888(const unsigned char *rgb565, unsigned char *bgr888, int width, int height)
 {
   int counter = 0;
@@ -540,6 +587,7 @@ void rgb565_to_bgr888(const unsigned char *rgb565, unsigned char *bgr888, int wi
 // https://stackoverflow.com/questions/2654480/writing-bmp-image-in-pure-c-c-without-other-libraries
 // https://en.wikipedia.org/wiki/BMP_file_format#File_structure
 
+// ------------------------------------------------------------------------------
 void save_bmp_image(const unsigned char *image)
 {
   static int image_counter = 0;
@@ -584,16 +632,19 @@ void save_bmp_image(const unsigned char *image)
   fclose(f);
 } /* save_bmp_image */
 
+// ------------------------------------------------------------------------------
 int get_camera_height()
 {
   return CAMERA_HEIGHT;
 }
 
+// ------------------------------------------------------------------------------
 int get_camera_width()
 {
   return CAMERA_WIDTH;
 }
 
+// ------------------------------------------------------------------------------
 void get_camera(unsigned char *red, unsigned char *green, unsigned char *blue)
 {
   if(camera_updated)
@@ -617,7 +668,7 @@ void get_camera(unsigned char *red, unsigned char *green, unsigned char *blue)
 ////////////////
 // temperature sensor (credits: Jonas Fontana)
 
-// get temperature
+// ------------------------------------------------------------------------------
 void get_temp(unsigned char *temp)
 {
   temp[0] = *(unsigned char *)(&sensor[36]);
@@ -626,7 +677,7 @@ void get_temp(unsigned char *temp)
 ////////////////
 // time-of-flight sensor (credits: Jonas Fontana)
 
-// get distance given in millimeters
+// ------------------------------------------------------------------------------
 void get_tof(short int *tof_distance)
 {
   tof_distance[0] = *(short int *)(&sensor[69]);
@@ -635,7 +686,7 @@ void get_tof(short int *tof_distance)
 ////////////////
 // accelerometer values (credits: Jonas Fontana)
 
-// get gyro
+// ------------------------------------------------------------------------------
 void get_gyro_axes( short *gyro)
 {
   gyro[AXES_X] = *( short *)(&sensor[18]);
@@ -643,25 +694,25 @@ void get_gyro_axes( short *gyro)
   gyro[AXES_Z] = *( short *)(&sensor[22]);
 }
 
-// get orientation
+// ------------------------------------------------------------------------------
 void get_orientation(float *orientation)
 {
   orientation[0] = *(float *)(&sensor[10]);
 }
 
-// get inclination
+// ------------------------------------------------------------------------------
 void get_inclination(float *inclination)
 {
   inclination[0] = *(float *)(&sensor[14]);
 }
 
-// get acceleration
+// ------------------------------------------------------------------------------
 void get_acceleration(float *acceleration)
 {
   acceleration[0] = *(float *)(&sensor[6]);
 }
 
-// get acceleration
+// ------------------------------------------------------------------------------
 void get_acceleration_axes(short int *acceleration)
 {
   acceleration[AXES_Y] = *(short int *)(&sensor[0]);
@@ -672,7 +723,7 @@ void get_acceleration_axes(short int *acceleration)
 ////////////////
 // playing sound (credits: Jonas Fontana)
 
-// play one of the default sounds
+// ------------------------------------------------------------------------------
 void play_sound(int sound)
 {
   switch (sound)
@@ -702,12 +753,13 @@ void play_sound(int sound)
   }
 } /* play_sound */
 
-// stop sound
+// ------------------------------------------------------------------------------
 void stop_sound(void)
 {
   command[20] = 0x20;
 }
 
+// ------------------------------------------------------------------------------
 void get_microphones(short int *soundlevels)
 {
   soundlevels[MICROPHONE_RIGHT] = *(short int *)(&sensor[71]);
@@ -716,8 +768,7 @@ void get_microphones(short int *soundlevels)
   soundlevels[MICROPHONE_FRONT] = *(short int *)(&sensor[77]);
 }
 
-////////////////
-
+// ------------------------------------------------------------------------------
 int get_robot_ID()
 {
   int a, b, c, d;
@@ -743,6 +794,7 @@ int get_robot_ID()
  *
  */
 
+// ------------------------------------------------------------------------------
 void init_communication()
 {
 
@@ -828,22 +880,22 @@ void init_communication()
   }
 } /* init_communication */
 
+// ------------------------------------------------------------------------------
 void disable_communication()
 {
   msgctl(msgid, IPC_RMID, NULL);
   shmctl(shmid, IPC_RMID, NULL);
 }
 
+// ------------------------------------------------------------------------------
 void send_msg_to_Q(const char *msg, int qid)
 {
-  // printf("%s\n",msg);
   message.mtype = COM_CHANNEL;
   strcpy(message.text, msg);
-  // printf("%s\n",message.text);
   msgsnd(qid, &message, sizeof(message), IPC_NOWAIT);
 }
 
-// send the message
+// ------------------------------------------------------------------------------
 void send_msg(const char *msg)
 {
   // broadcast to all other queues
@@ -854,16 +906,11 @@ void send_msg(const char *msg)
   }
 }
 
-// receive message
+// ------------------------------------------------------------------------------
 void receive_msg(char* buffer)
 {
-  // printf("%s\n",buffer);
   strcpy(buffer, MSG_NONE);
 
   if (msgrcv(msgid, &message, sizeof(message), COM_CHANNEL, IPC_NOWAIT) >= 0)
     strcpy(buffer, message.text);
-
-  // printf("%s\n",message.text);
-
-  // printf("%s\n",buffer);
 }

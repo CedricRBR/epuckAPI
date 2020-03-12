@@ -42,7 +42,7 @@
 #define PROX_LEFT_SIDE        5                                 // !< index of the left side proximity sensor
 #define PROX_LEFT_FRONT_DIAG  6                                 // !< index of the front left diagonal proximity sensor
 #define PROX_LEFT_FRONT       7                                 // !< index of the front left proximity sensor
-#define MAX_PROX              200                               // !< maximum value of a proximity sensor
+#define MAX_PROX              800                               // !< maximum value of a proximity sensor
 
 #define GROUND_SENSORS_COUNT  3                                 // !< number of ground sensors
 #define GS_LEFT               0                                 // !< index of the left ground sensor

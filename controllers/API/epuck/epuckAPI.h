@@ -1,3 +1,9 @@
+// ------------------------------------------------------------------------------
+// ! \file epuckAPI.h
+// ! declares the epuck API
+//
+// ------------------------------------------------------------------------------
+
 #ifndef EPUCKAPI_H
 #define EPUCKAPI_H
 
@@ -145,6 +151,8 @@ void   cleanup_robot();
  *  \return always returns 1
  **/
 int    robot_go_on();
+
+void   set_steps(int steps_left, int steps_right);
 
 /**
  *  set the speed of the robot
@@ -314,6 +322,8 @@ void   get_temp(unsigned char *temp);
  *
  *  Measures distance in mm
  *
+ *  NOTE: points slightly upwards!
+ *
  *  \param tof_distance pointer to array holding the data
  *  \return void
  **/
@@ -330,6 +340,8 @@ void   get_gyro_axes( short *gyro);
 /**
  *  get orientation data
  *
+ *  angle between inclination and travel direction (dotprod). becomes unstable when inclination tends to 0
+ *
  *  \param orientation pointer to array holding the data
  *  \return void
  **/
@@ -337,12 +349,17 @@ void   get_orientation(float *orientation);
 /**
  *  get inclination data
  *
+ *  angle from vertical
+ *
  *  \param inclination pointer to array holding the data
  *  \return void
  **/
 void   get_inclination(float *inclination);
 /**
  *  get acceleration data
+ *
+ *   len of vector defined by orientation and inclination (spherical)
+ *   does not take into account gravity (a still robot will have a positive z value)
  *
  *  \param acceleration pointer to array holding the data
  *  \return void
@@ -358,6 +375,13 @@ void   get_acceleration_axes(short int *acceleration);
 /**
  *  play a sound
  *
+ *  the 5 songs the robot can play are:
+ *  MARIO
+ *  UNDERWORLD
+ *  STARWARS
+ *  4KHz
+ *  10KHz
+ *
  *  \param sound index of the song to play
  *  \return void
  **/
@@ -370,6 +394,9 @@ void   play_sound(int sound);
 void   stop_sound(void);
 /**
  *  get microphone data
+ *
+ *  4 micropohones in total, spaced out by 90°
+ *  only measures sound levels / amplitude
  *
  *  \param soundlevels pointer to array holding the data
  *  \return void
