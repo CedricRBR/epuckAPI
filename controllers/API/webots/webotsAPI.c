@@ -1,5 +1,7 @@
 #include "webotsAPI.h"
 
+#define SPEED_CONVERSION 0.006 // !< speed conversion: robot's max speed is 1000, webot's max speed is 6.
+
 WbDeviceTag  left_motor;
 WbDeviceTag  right_motor;
 
@@ -20,6 +22,7 @@ WbDeviceTag  cam;
 
 WbDeviceTag  emitter;
 WbDeviceTag  receiver;
+
 ///////////////
 // ROBOT CONTROL
 
@@ -40,8 +43,8 @@ void init_motor()
 
 void set_speed(double left, double right)
 {
-  wb_motor_set_velocity(left_motor,  left);
-  wb_motor_set_velocity(right_motor, right);
+  wb_motor_set_velocity(left_motor,  left * SPEED_CONVERSION);
+  wb_motor_set_velocity(right_motor, right * SPEED_CONVERSION);
 }
 
 double bounded_speed(double speed)

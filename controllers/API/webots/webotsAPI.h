@@ -25,8 +25,8 @@
 
 #define TIME_STEP             64                                // !< number of milliseconds to compute per simulation step
 
-#define MAX_SPEED             6.0                               // !< maximum speed of the robot
-#define NORM_SPEED            2.0                               // !< normal speed of the robot
+#define MAX_SPEED             1000                              // !< maximum speed of the robot
+#define NORM_SPEED            500                               // !< normal speed of the robot
 
 #define LED_COUNT             4                                 // !< number of LEDs on the robot
 
@@ -55,7 +55,7 @@
 
 #define COM_CHANNEL           1                                 // !< communication channel index
 #define MSG_NONE              "ZZZZ"                            // !< dummy message
-#define MSG_LENGTH            4                                 // !< byte lnegth of the message
+#define MSG_LENGTH            4                                 // !< byte length of the message
 
 extern WbDeviceTag  left_motor;                                 // !< left motor
 extern WbDeviceTag  right_motor;                                // !< right motor
