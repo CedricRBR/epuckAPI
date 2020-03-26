@@ -12,7 +12,7 @@ WbDeviceTag  led_tags[LED_COUNT];
 const char * prox_sensors_names[PROX_SENSORS_COUNT]
   = {"ps0", "ps1", "ps2", "ps3", "ps4", "ps5", "ps6", "ps7"};
 WbDeviceTag  prox_sensor_tags[PROX_SENSORS_COUNT];
-double       prox_corr_vals[PROX_SENSORS_COUNT];
+double       prox_corr[PROX_SENSORS_COUNT];
 
 const char * ground_sensors_names[GROUND_SENSORS_COUNT]
   = {"gs0", "gs1", "gs2"};
@@ -108,13 +108,68 @@ void get_prox(short int *prox_values)
 
 void get_prox_calibrated(short int *prox_values)
 {
-  get_prox(prox_values);
+  // get_prox(prox_values);
+  int i;
+  int diff;
+
+  for (i = 0; i<PROX_SENSORS_COUNT; i++)
+  {
+    diff           = wb_distance_sensor_get_value(prox_sensor_tags[i]) - prox_corr[i];
+    prox_values[i] = diff<0 ? 0 : diff;
+  }
 }
 
+// void calibrate_prox()
+// {
+// printf("no calibration in simulation: get_prox_calibrated() is equivalent to get_prox()\n");
+// }
 void calibrate_prox()
 {
-  printf("no calibration in simulation: get_prox_calibrated() is equivalent to get_prox()\n");
-}
+  int       i, j;
+  short int tmp[PROX_SENSORS_COUNT];
+
+  // init array for calibration values
+  for (i = 0; i<PROX_SENSORS_COUNT; i++)
+  {
+    prox_corr[i] = 0;
+  }
+
+  printf("calibrating proximity ...");
+
+  for (i = 0; i<LED_COUNT; i++)
+  {
+    toggle_led(i);
+  }
+
+  // get multiple readings for each sensor
+  for (j = 0; j<(NBR_CALIB + OFFSET_CALIB) && robot_go_on(); j++)
+  {
+    if (j >= OFFSET_CALIB)
+    {
+
+      get_prox(tmp);
+
+      for (i = 0; i<PROX_SENSORS_COUNT; i++)
+      {
+        prox_corr[i] += tmp[i];
+      }
+    }
+  }
+
+  // calculate average for each sensor
+  for (i = 0; i<PROX_SENSORS_COUNT; i++)
+  {
+    prox_corr[i] = prox_corr[i] / NBR_CALIB;
+    printf("%d ", prox_corr[i]);
+  }
+
+  for (i = 0; i<LED_COUNT; i++)
+  {
+    toggle_led(i);
+  }
+
+  printf(" done calibration\n");
+} /* calibrate_prox */
 
 const char *light_sensors_names[PROX_SENSORS_COUNT] =
 {"ls0", "ls1", "ls2", "ls3", "ls4", "ls5", "ls6", "ls7"};

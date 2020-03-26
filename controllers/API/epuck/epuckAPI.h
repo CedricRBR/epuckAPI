@@ -47,7 +47,7 @@
 #define PROX_LEFT_FRONT_DIAG  6                                     // !< index of the front left diagonal proximity sensor
 #define PROX_LEFT_FRONT       7                                     // !< index of the front left proximity sensor
 
-#define MAX_PROX              800                                   // !< maximum value of a proximity sensor
+#define MAX_PROX              200                                   // !< maximum value of a proximity sensor
 
 #define GROUND_SENSORS_COUNT  3                                     // !< number of ground sensors
 #define GS_LEFT               0                                     // !< index of the left ground sensor
@@ -117,42 +117,42 @@ extern struct msg_buffer  message;                                  // !< holds 
  *
  *  \return void
  **/
-void   init_robot();
+void init_robot();
 /**
  *  initialise the sensors
  *
  *  \return void
  **/
-void   init_sensors();
+void init_sensors();
 
 /**
  *  disable the sensors
  *
  *  \return void
  **/
-void   disable_sensors();
+void disable_sensors();
 
 /**
  *  get the ID of the robot
  *
  *  \return the ID of the robot
  **/
-int    get_robot_ID();
+int get_robot_ID();
 
 /**
  *  clean up the robot
  *
  *  \return void
  **/
-void   cleanup_robot();
+void cleanup_robot();
 /**
  *  send the commands in the output buffer and receive the data from the sensors
  *
  *  \return always returns 1
  **/
-int    robot_go_on();
+int  robot_go_on();
 
-void   set_steps(int steps_left, int steps_right);
+void set_steps(int steps_left, int steps_right);
 
 /**
  *  set the speed of the robot
@@ -161,7 +161,7 @@ void   set_steps(int steps_left, int steps_right);
  *  \param right the speed of the right wheel
  *  \return void
  **/
-void   set_speed(double left, double right);
+void set_speed(double left, double right);
 
 /**
  *  get the current step values
@@ -169,7 +169,7 @@ void   set_speed(double left, double right);
  *  \param left the pointer to the int holding the left motor data
  *  \param right the pointer to the int holding the right motor data
  **/
-void   get_steps(short *left, short*right);
+void get_steps(short *left, short*right);
 
 /**
  *  return a bounded version of the input speed
@@ -185,7 +185,7 @@ double bounded_speed(double speed);
  *  \param led_position the index of the LED to toggle
  *  \return void
  **/
-void   toggle_led(int led_position);
+void toggle_led(int led_position);
 
 /**
  *  turn a given LED on
@@ -193,7 +193,7 @@ void   toggle_led(int led_position);
  *  \param led_position the index of the LED to turn on
  *  \return void
  **/
-void   disable_led(int led_position);
+void disable_led(int led_position);
 
 /**
  *  turn a given LED off
@@ -201,35 +201,35 @@ void   disable_led(int led_position);
  *  \param led_position the index of the LED to turn off
  *  \return void
  **/
-void   enable_led(int led_position);
+void enable_led(int led_position);
 
 /**
  *  turn the body LED on
  *
  *  \return void
  **/
-void   enable_body_led(void);
+void enable_body_led(void);
 
 /**
  *  turn the body LED off
  *
  *  \return void
  **/
-void   disable_body_led(void);
+void disable_body_led(void);
 
 /**
  *  turn the fonr LED on
  *
  *  \return void
  **/
-void   enable_front_led(void);
+void enable_front_led(void);
 
 /**
  *  turn the front LED pff
  *
  *  \return void
  **/
-void   disable_front_led(void);
+void disable_front_led(void);
 
 /**
  *  get the raw proximity sensor data
@@ -237,7 +237,7 @@ void   disable_front_led(void);
  *  \param prox_values pointer to the array holding the  data
  *  \return void
  **/
-void   get_prox(short int *prox_values);
+void get_prox(short int *prox_values);
 
 /**
  *  get the calibrated proximity sensor data
@@ -245,14 +245,14 @@ void   get_prox(short int *prox_values);
  *  \param prox_values pointer to the array holding the data
  *  \return void
  **/
-void   get_prox_calibrated(short int *prox_values);
+void get_prox_calibrated(short int *prox_values);
 
 /**
  *  calibrate the proximity sensors
  *
  *  \return void
  **/
-void   calibrate_prox();
+void calibrate_prox();
 
 /**
  *  get the raw light sensor data
@@ -260,7 +260,7 @@ void   calibrate_prox();
  *  \param prox_values pointer to the array holding the  data
  *  \return void
  **/
-void   get_light(short int *prox_values);
+void get_light(short int *prox_values);
 
 /**
  *  get the calibrated light sensor data
@@ -268,14 +268,14 @@ void   get_light(short int *prox_values);
  *  \param prox_values pointer to the array holding the data
  *  \return void
  **/
-void   get_light_calibrated(short int *prox_values);
+void get_light_calibrated(short int *prox_values);
 
 /**
  *  calibrate the light sensors
  *
  *  \return void
  **/
-void   calibrate_light();
+void calibrate_light();
 
 /**
  *  get ground sensor data
@@ -283,7 +283,7 @@ void   calibrate_light();
  *  \param ground_values pointer to the array holding the data
  *  \return void
  **/
-void   get_ground(short int *ground_values);
+void get_ground(short int *ground_values);
 
 /**
  *  get an image from the camera
@@ -293,21 +293,21 @@ void   get_ground(short int *ground_values);
  *  \param blue pointer to the array holding the blue channel data
  *  \return void
  **/
-void   get_camera(unsigned char *red, unsigned char *green, unsigned char *blue);
+void get_camera(unsigned char *red, unsigned char *green, unsigned char *blue);
 
 /**
  *  initiliase and enable the camera
  *
  *  \return void
  **/
-void   init_camera();
+void init_camera();
 
 /**
  *  disable the camera
  *
  *  \return void
  **/
-void   disable_camera();
+void disable_camera();
 
 /**
  *  Get temperature
@@ -315,7 +315,7 @@ void   disable_camera();
  *  \param temp pointer to array holding the data
  *  \return void
  **/
-void   get_temp(unsigned char *temp);
+void get_temp(unsigned char *temp);
 
 /**
  *  Get ToF data
@@ -327,7 +327,7 @@ void   get_temp(unsigned char *temp);
  *  \param tof_distance pointer to array holding the data
  *  \return void
  **/
-void   get_tof(short int *tof_distance);
+void get_tof(short int *tof_distance);
 
 /**
  *  get gyroscopic data
@@ -335,7 +335,7 @@ void   get_tof(short int *tof_distance);
  *  \param gyro pointer to array holding the data
  *  \return void
  **/
-void   get_gyro_axes( short *gyro);
+void get_gyro_axes( short *gyro);
 
 /**
  *  get orientation data
@@ -345,7 +345,7 @@ void   get_gyro_axes( short *gyro);
  *  \param orientation pointer to array holding the data
  *  \return void
  **/
-void   get_orientation(float *orientation);
+void get_orientation(float *orientation);
 /**
  *  get inclination data
  *
@@ -354,7 +354,7 @@ void   get_orientation(float *orientation);
  *  \param inclination pointer to array holding the data
  *  \return void
  **/
-void   get_inclination(float *inclination);
+void get_inclination(float *inclination);
 /**
  *  get acceleration data
  *
@@ -364,14 +364,14 @@ void   get_inclination(float *inclination);
  *  \param acceleration pointer to array holding the data
  *  \return void
  **/
-void   get_acceleration(float *acceleration);
+void get_acceleration(float *acceleration);
 /**
  *  get axes acceleration data
  *
  *  \param acceleration pointer to array holding the data
  *  \return void
  **/
-void   get_acceleration_axes(short int *acceleration);
+void get_acceleration_axes(short int *acceleration);
 /**
  *  play a sound
  *
@@ -385,13 +385,13 @@ void   get_acceleration_axes(short int *acceleration);
  *  \param sound index of the song to play
  *  \return void
  **/
-void   play_sound(int sound);
+void play_sound(int sound);
 /**
  *  stop playing sounds
  *
  *  \return void
  **/
-void   stop_sound(void);
+void stop_sound(void);
 /**
  *  get microphone data
  *
@@ -401,21 +401,21 @@ void   stop_sound(void);
  *  \param soundlevels pointer to array holding the data
  *  \return void
  **/
-void   get_microphones(short int *soundlevels);
+void get_microphones(short int *soundlevels);
 
 /**
  *  initiliase and enable communication
  *
  *  \return void
  **/
-void   init_communication();
+void init_communication();
 
 /**
  *  disable communication
  *
  *  \return void
  **/
-void   disable_communication();
+void disable_communication();
 
 /**
  *  send a message to the controller
@@ -423,7 +423,7 @@ void   disable_communication();
  *  \param snd pointer to the char array holding the data to send
  *  \return void
  **/
-void   send_msg(const char *snd);
+void send_msg(const char *snd);
 
 /**
  *  receive a message from the controller
@@ -431,6 +431,6 @@ void   send_msg(const char *snd);
  *  \param rcv pointer to the char array holding the received data
  *  \return void
  **/
-void   receive_msg(char *rcv);
+void receive_msg(char *rcv);
 
 #endif // EPUCKAPI_H

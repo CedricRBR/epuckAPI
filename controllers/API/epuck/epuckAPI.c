@@ -57,6 +57,7 @@ void init_TCP(char *ipaddr)
   fprintf(stderr, "Try to connect to %s:%d (TCP)\n", inet_ntoa(remote_addr.sin_addr), htons(remote_addr.sin_port));
 
   fd = socket(AF_INET, SOCK_STREAM, 0);
+
   if(fd < 0)
   {
     perror("TCP cannot create socket: ");
@@ -65,6 +66,7 @@ void init_TCP(char *ipaddr)
 
   int ret_value;
   ret_value = connect(fd, (struct sockaddr *) &remote_addr, sizeof(remote_addr));
+
   if(ret_value < 0)
   {
     perror("TCP cannot connect: ");
@@ -123,7 +125,9 @@ void init_camera()
   struct stat st = {0};
 
   if (stat("./images", &st) == -1)
+  {
     mkdir("./images", 0700);
+  }
 } /* init_camera */
 
 // ------------------------------------------------------------------------------
@@ -163,6 +167,7 @@ void init_robot()
 void cleanup_robot()
 {
   disable_camera();
+
   for (int i = 0; i < 50; i++)
   {
     set_speed(0, 0);
@@ -178,10 +183,12 @@ void send_command()
   // print_command();
 
   bytes_sent = 0;
+
   while(bytes_sent < sizeof(command))
   {
     bytes_sent += send(fd, (char *)&command[bytes_sent], sizeof(command) - bytes_sent, 0);
   }
+
   command[2] = 0; // Stop proximity calibration.
 }
 
@@ -189,6 +196,7 @@ void send_command()
 void receive_data()
 {
   bytes_recv = recv(fd, (char *)&header, 1, 0);
+
   if (bytes_recv != 1)
   {
     fprintf(stderr, "Failed to receive header: %d\n", bytes_recv);
@@ -204,6 +212,7 @@ void receive_data()
   switch(header)
   {
     case 0x01:
+
      // printf("received camera\n");
      // Receive image
      while (bytes_recv < sizeof(rgb565))
@@ -221,6 +230,7 @@ void receive_data()
      break;
 
     case 0x02:
+
      // printf("received sensors\n");
      while(bytes_recv < sizeof(sensor))
      {
@@ -234,7 +244,7 @@ void receive_data()
 
     default:
      break;
-  }
+  } /* switch */
 } /* receive_data */
 
 // ------------------------------------------------------------------------------
@@ -278,7 +288,7 @@ void set_steps(int steps_left, int steps_right)
 // ------------------------------------------------------------------------------
 void set_speed_left(int speed_left)
 {
-  if(speed_left > MAX_SPEED || speed_left < -MAX_SPEED)
+  if((speed_left > MAX_SPEED) || (speed_left < -MAX_SPEED))
   {
     printf("Invalid speed_left: %d. Accepts -%d <= x <= %d. Left speed unchanged.\n", speed_left, MAX_SPEED, MAX_SPEED);
     return;
@@ -291,7 +301,7 @@ void set_speed_left(int speed_left)
 // ------------------------------------------------------------------------------
 void set_speed_right(int speed_right)
 {
-  if(speed_right > MAX_SPEED || speed_right < -MAX_SPEED)
+  if((speed_right > MAX_SPEED) || (speed_right < -MAX_SPEED))
   {
     printf("Invalid speed_right: %d. Accepts -%d <= x <= %d. Right speed unchanged.\n", speed_right, MAX_SPEED, MAX_SPEED);
     return;
@@ -324,7 +334,7 @@ double bounded_speed(double speed)
 // ------------------------------------------------------------------------------
 void toggle_led(int led_position)
 {
-  if(led_position > 3 || led_position < 0)
+  if((led_position > 3) || (led_position < 0))
   {
     printf("Invalid led_position: %d. Accepts 0 <= x <= 3. LEDs unchanged.\n", led_position);
     return;
@@ -336,7 +346,7 @@ void toggle_led(int led_position)
 // ------------------------------------------------------------------------------
 void enable_led(int led_position)
 {
-  if(led_position > 3 || led_position < 0)
+  if((led_position > 3) || (led_position < 0))
   {
     printf("Invalid led_position: %d. Accepts 0 <= x <= 3. LEDs unchanged.\n", led_position);
     return;
@@ -348,7 +358,7 @@ void enable_led(int led_position)
 // ------------------------------------------------------------------------------
 void disable_led(int led_position)
 {
-  if(led_position > 3 || led_position < 0)
+  if((led_position > 3) || (led_position < 0))
   {
     printf("Invalid led_position: %d. Accepts 0 <= x <= 3. LEDs unchanged.\n", led_position);
     return;
@@ -409,6 +419,7 @@ void calibrate_prox()
     {
 
       get_prox(tmp);
+
       for (i = 0; i<PROX_SENSORS_COUNT; i++)
       {
         prox_corr[i] += tmp[i];
@@ -495,6 +506,7 @@ void calibrate_light()
     {
 
       get_light(tmp);
+
       for (i = 0; i<PROX_SENSORS_COUNT; i++)
       {
         light_corr[i] += tmp[i];
@@ -622,6 +634,7 @@ void save_bmp_image(const unsigned char *image)
   FILE *        f         = fopen(filename, "wb");
   fwrite(bmpfileheader, 1, 14, f);
   fwrite(bmpinfoheader, 1, 40, f);
+
   for (int i = 0; i < height; i++)
   {
     // https://stackoverflow.com/questions/7886196/c-pointer-1-meaning/7886232
@@ -750,7 +763,7 @@ void play_sound(int sound)
 
     default:
      break;
-  }
+  } /* switch */
 } /* play_sound */
 
 // ------------------------------------------------------------------------------
@@ -805,23 +818,31 @@ void init_communication()
   // generate IPC Q for receiving messages
   // ftok to generate a unique key based on current directory and robot ip address
   key = ftok(".", id);
-  if (DEBUG) printf("IPC msg Q key %d\n", key);
+
+  if (DEBUG) {printf("IPC msg Q key %d\n", key);}
 
   // delete and re-create msg Q
   msgid = msgget(key, 0666);
+
   if (msgid == -1)
+  {
     printf("Message queue does not exists\n");
+  }
   else if (msgctl(msgid, IPC_RMID, NULL) == -1)
+  {
     printf("Message queue could not be deleted\n");
+  }
   else
-  if (DEBUG) printf("Message queue reset\n");
+  if (DEBUG) {printf("Message queue reset\n");}
 
   msgid = msgget(key, 0666 | IPC_CREAT);
-  if (DEBUG) printf("IPC msg Q ID %d\n", msgid);
+
+  if (DEBUG) {printf("IPC msg Q ID %d\n", msgid);}
 
   // define shared memory segment
   key = ftok(".", COM_CHANNEL);
-  if (DEBUG) printf("IPC shared mem key %d\n", key);
+
+  if (DEBUG) {printf("IPC shared mem key %d\n", key);}
 
   // shmget returns an identifier in shmid
   shmid = shmget(key, 512, 0666);
@@ -829,9 +850,10 @@ void init_communication()
   // check the number of processes attached to shared memory
   struct shmid_ds buf;
   shmctl(shmid, IPC_STAT, &buf);
-  if (DEBUG) printf("processes attached: %d\n", (int) buf.shm_nattch);
 
-  if (DEBUG) printf("IPC shared mem ID check %d\n", shmid);
+  if (DEBUG) {printf("processes attached: %d\n", (int) buf.shm_nattch);}
+
+  if (DEBUG) {printf("IPC shared mem ID check %d\n", shmid);}
 
   if (shmid == -1)
   {
@@ -840,22 +862,28 @@ void init_communication()
   else if (buf.shm_nattch == 0)
   {
     if (shmctl(shmid, IPC_RMID, NULL) == -1)
+    {
       printf("Shared memory could not be deleted\n");
+    }
     else
-    if (DEBUG) printf("Shared memory reset\n");
+    if (DEBUG) {printf("Shared memory reset\n");}
   }
 
   shmid = shmget(key, 512, 0666 | IPC_CREAT);
-  if (DEBUG) printf("IPC shared mem ID %d\n", shmid);
 
-  if (msgid > 0 && shmid > 0)
+  if (DEBUG) {printf("IPC shared mem ID %d\n", shmid);}
+
+  if ((msgid > 0) && (shmid > 0))
+  {
     printf("msg Q and shared memory intialized\n");
+  }
 
   // shmat to attach to shared memory
   queues = (int*) shmat(shmid, (void*)0, 0);
 
   int nb = queues[0];
-  if (DEBUG) printf("nb %d\n", nb);
+
+  if (DEBUG) {printf("nb %d\n", nb);}
 
   if (nb == 0)  // this is the first controller to store its msg Q ID
   {
@@ -902,7 +930,9 @@ void send_msg(const char *msg)
   for (int i = 1; i<queues[0] + 1; i++)
   {
     if (queues[i] != msgid)
+    {
       send_msg_to_Q(msg, queues[i]);
+    }
   }
 }
 
@@ -912,5 +942,7 @@ void receive_msg(char* buffer)
   strcpy(buffer, MSG_NONE);
 
   if (msgrcv(msgid, &message, sizeof(message), COM_CHANNEL, IPC_NOWAIT) >= 0)
+  {
     strcpy(buffer, message.text);
+  }
 }
