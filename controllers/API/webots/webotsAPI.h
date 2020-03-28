@@ -156,10 +156,6 @@ void enable_led(int led_position);
  **/
 void disable_led(int led_position);
 
-/*** PROXIMITY SENSORS start ***/
-
-/*** IR SENSORS start ***/
-
 /**
  *  Initialise proximity sensors
  *
@@ -191,6 +187,7 @@ void get_prox_calibrated(short int *prox_values);
 void calibrate_prox();
 
 /**
+ *  <<<<<<< HEAD
  *  get the light sensor data
  *
  *  \param prox_values pointer to the array holding the data
@@ -228,6 +225,22 @@ void disable_prox();
 void init_ground();
 
 /**
+ *  =======
+ *  Disable proximity sensors
+ *
+ *  \return void
+ **/
+void disable_prox();
+
+/**
+ *  Initialise ground sensors
+ *
+ *  \return void
+ **/
+void init_ground();
+
+/**
+ *  >>>>>>> 9541c2903e8a14ee3a71da48e60bd8f1ad0a6cc4
  *  get ground sensor data
  *
  *  \param ground_values pointer to the array holding the data
@@ -261,6 +274,7 @@ void init_camera();
 void disable_camera();
 
 /**
+ *  <<<<<<< HEAD
  *  get temperature data
  *
  *  \param temp pointer to the array holding the data
@@ -350,6 +364,22 @@ void get_microphones(short int *soundlevels);
 void get_camera(unsigned char *red, unsigned char *green, unsigned char *blue);
 
 /**
+ *  =======
+ *  get an image from the camera
+ *
+ *  \param red pointer to the array holding the red channel data
+ *  \param green pointer to the array holding the green channel data
+ *  \param blue pointer to the array holding the blue channel data
+ *  \return void
+ **/
+void get_camera(unsigned char *red, unsigned char *green, unsigned char *blue);
+
+/*** CAMERA end ***/
+
+/*** COMMUNICATION start ***/
+
+/**
+ *  >>>>>>> 9541c2903e8a14ee3a71da48e60bd8f1ad0a6cc4
  *  initiliase and enable communication
  *
  *  \return void

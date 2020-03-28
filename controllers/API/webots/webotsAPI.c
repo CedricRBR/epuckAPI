@@ -27,9 +27,6 @@ WbDeviceTag  cam;
 WbDeviceTag  emitter;
 WbDeviceTag  receiver;
 
-///////////////
-// ROBOT CONTROL
-
 void init_motor()
 {
   // get a handler to the motors
@@ -43,6 +40,7 @@ void init_motor()
   // set speed to 0
   wb_motor_set_velocity(left_motor,  0.0);
   wb_motor_set_velocity(right_motor, 0.0);
+
 }
 
 void set_speed(double left, double right)
@@ -209,7 +207,6 @@ void disable_prox()
   {
     prox_sensor_tags[i] = wb_robot_get_device(prox_sensors_names[i]);
     wb_distance_sensor_disable(prox_sensor_tags[i]);
-
   }
 }
 
@@ -313,7 +310,6 @@ void save_bmp_image(const unsigned char *image)
 
 void get_camera(unsigned char *red, unsigned char *green, unsigned char *blue)
 {
-
   const unsigned char* im = wb_camera_get_image(cam);
   int                  height = CAMERA_HEIGHT;
   int                  width = CAMERA_WIDTH;

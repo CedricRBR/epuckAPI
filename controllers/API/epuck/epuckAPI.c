@@ -28,9 +28,9 @@ struct msg_buffer
   long mtype;
   char text[MSG_LENGTH + 1];
 }
-message;
 
-// ------------------------------------------------------------------------------
+message;// !< holds a message to be sent
+
 void print_command()
 {
   for (int k = 0; k < 21; ++k)
@@ -245,7 +245,8 @@ void receive_data()
     default:
      break;
   } /* switch */
-} /* receive_data */
+
+}   /* receive_data */
 
 // ------------------------------------------------------------------------------
 int robot_go_on()
@@ -764,7 +765,8 @@ void play_sound(int sound)
     default:
      break;
   } /* switch */
-} /* play_sound */
+
+}   /* play_sound */
 
 // ------------------------------------------------------------------------------
 void stop_sound(void)
