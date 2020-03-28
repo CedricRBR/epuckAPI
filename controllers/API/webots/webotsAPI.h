@@ -10,6 +10,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <webots/accelerometer.h>
 #include <webots/camera.h>
 #include <webots/distance_sensor.h>
 #include <webots/emitter.h>
@@ -18,10 +21,6 @@
 #include <webots/motor.h>
 #include <webots/receiver.h>
 #include <webots/robot.h>
-
-// to create dir
-#include <sys/stat.h>
-#include <unistd.h>
 
 #define TIME_STEP             64                                // !< number of milliseconds to compute per simulation step
 
@@ -57,6 +56,25 @@
 #define MSG_NONE              "ZZZZ"                            // !< dummy message
 #define MSG_LENGTH            4                                 // !< byte length of the message
 
+#define TEMP_SENSOR_COUNT     1                                 // !< number of temperature sensors
+
+#define TOF_SENSOR_COUNT      1                                 // !< number of Time of Flight sensors
+
+#define GYRO_SENSOR_COUNT     3                                 // !< number of gyroscopic sensors
+#define ORIENT_SENSOR_COUNT   1                                 // !< number of orientation sensors
+#define INCLIN_SENSOR_COUNT   1                                 // !< number of inclination sensors
+#define ACC_SENSOR_COUNT      1                                 // !< number of accelerometer sensors
+#define ACC_RAW_SENSOR_COUNT  3                                 // !< number of raw accelerometer sensors
+#define AXES_X                0                                 // !< index of the X-axis gyro / orient / inclin / acc sensor
+#define AXES_Y                1                                 // !< index of the Y-axis gyro / orient / inclin / acc sensor
+#define AXES_Z                2                                 // !< index of the Z-axis gyro / orient / inclin / acc sensor
+
+#define MICROPHONE_COUNT      4                                 // !< number of microphones
+#define MICROPHONE_FRONT      0                                 // !< index of the front microphone
+#define MICROPHONE_RIGHT      1                                 // !< index of the right microphone
+#define MICROPHONE_BACK       2                                 // !< index of the back microphone
+#define MICROPHONE_LEFT       3                                 // !< index of the left microphone
+
 extern WbDeviceTag  left_motor;                                 // !< left motor
 extern WbDeviceTag  right_motor;                                // !< right motor
 
@@ -69,6 +87,9 @@ extern double       prox_corr[PROX_SENSORS_COUNT];              // !< proximity 
 
 extern const char * ground_sensors_names[GROUND_SENSORS_COUNT]; // !< ground sensor names
 extern WbDeviceTag  ground_sensor_tags[GROUND_SENSORS_COUNT];   // !< ground sensor webots link
+
+extern const char * light_sensors_names[PROX_SENSORS_COUNT];    // !< light sensor names
+extern WbDeviceTag  light_sensor_tags[PROX_SENSORS_COUNT];      // !< light sensor webots link
 
 extern WbDeviceTag  cam;                                        // !< camera webots link
 
@@ -169,8 +190,27 @@ void get_prox_calibrated(short int *prox_values);
  **/
 void calibrate_prox();
 
+/**
+ *  get the light sensor data
+ *
+ *  \param prox_values pointer to the array holding the data
+ *  \return void
+ **/
 void get_light(short int *prox_values);
+
+/**
+ *  get the calibrated light sensor data
+ *
+ *  \param prox_values pointer to the array holding the data
+ *  \return void
+ **/
 void get_light_calibrated(short int *prox_values);
+
+/**
+ *  calibrate the light sensors
+ *
+ *  \return void
+ **/
 void calibrate_light();
 
 /**
@@ -220,66 +260,84 @@ void init_camera();
  **/
 void disable_camera();
 
-/*** TEMPERATURE start ***/
+/**
+ *  get temperature data
+ *
+ *  \param temp pointer to the array holding the data
+ **/
 
-#define TEMP_SENSOR_COUNT 1
 void get_temp(unsigned char *temp);
 
-/*** TEMPERATURE stop ***/
-
-/*** TOF start ***/
-
-#define TOF_SENSOR_COUNT 1
+/**
+ *  get Time of Flight data
+ *
+ *  \param tof_distance pointer to the array holding the data
+ **/
 void get_tof(short int *tof_distance);
 
-/*** TOF stop ***/
-
-/*** ACCELEROMETER start ***/
-#include <webots/accelerometer.h>
-
-#define AXES_X            0
-#define AXES_Y            1
-#define AXES_Z            2
-
-// instantaneous rotational speed for each axis
-#define GYRO_SENSOR_COUNT 3
+/**
+ *  get gyroscopic data
+ *
+ *  get the instantaneous rotational speed for each axis
+ *
+ *  \param gyro pointer to the array holding the data
+ **/
 void get_gyro_axes( short *gyro);
 
-// planar orientation of acceleration vector (relative to robot)
-#define ORIENT_SENSOR_COUNT 1
+/**
+ *  get orientation of robot
+ *
+ *  get the planar orientation of acceleration vector (relative to robot)
+ *
+ *  \param orientation pointer to the array holding the data
+ **/
 void get_orientation(float *orientation);
-
-// inclination to vertical of acceleration vector
-#define INCLIN_SENSOR_COUNT 1
+/**
+ *  get inclination of robot
+ *
+ *  get the inclination to vertical of the acceleration vector
+ *
+ *  \param inclination pointer to the array holding the data
+ **/
 void get_inclination(float *inclination);
 
-// magnitude of acceleration vector
-#define ACC_SENSOR_COUNT 1
+/**
+ *  get acceleration of robot
+ *
+ *  get the magnitude of the acceleration vector
+ *
+ *  \param acceleration pointer to the array holding the data
+ **/
 void get_acceleration(float *acceleration);
 
-// raw acceleration values for each axis
-#define ACC_RAW_SENSOR_COUNT 3
+/**
+ *  get the raw acceleration fo the robot
+ *
+ *  get the raw acceleration values for each axis
+ *
+ *  \param acceleration pointer to the array holding the data
+ **/
 void get_acceleration_axes(short int *acceleration);
 
-/*** ACCELEROMETER stop ***/
-
-/*** SOUND start ***/
-
+/**
+ *  play a sound
+ *
+ *  \param sound index of the sound to play
+ **/
 void play_sound(int sound);
+
+/**
+ *  stop playing a sound
+ *
+ **/
 void stop_sound(void);
 
-#define MICROPHONE_COUNT 4
-
-#define MICROPHONE_FRONT 0
-#define MICROPHONE_RIGHT 1
-#define MICROPHONE_BACK  2
-#define MICROPHONE_LEFT  3
-
+/**
+ *  get microphone data
+ *
+ *  \param soundlevels pointer to the array holding the data
+ **/
 void get_microphones(short int *soundlevels);
-
-/*** SOUND stop ***/
-
-/*** COMMUNICATION start ***/
 
 /**
  *  get an image from the camera
@@ -290,9 +348,6 @@ void get_microphones(short int *soundlevels);
  *  \return void
  **/
 void get_camera(unsigned char *red, unsigned char *green, unsigned char *blue);
-/*** CAMERA end ***/
-
-/*** COMMUNICATION start ***/
 
 /**
  *  initiliase and enable communication

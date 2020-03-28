@@ -18,6 +18,10 @@ const char * ground_sensors_names[GROUND_SENSORS_COUNT]
   = {"gs0", "gs1", "gs2"};
 WbDeviceTag  ground_sensor_tags[GROUND_SENSORS_COUNT];
 
+const char * light_sensors_names[PROX_SENSORS_COUNT]
+  = {"ls0", "ls1", "ls2", "ls3", "ls4", "ls5", "ls6", "ls7"};
+WbDeviceTag  light_sensor_tags[PROX_SENSORS_COUNT];
+
 WbDeviceTag  cam;
 
 WbDeviceTag  emitter;
@@ -119,10 +123,6 @@ void get_prox_calibrated(short int *prox_values)
   }
 }
 
-// void calibrate_prox()
-// {
-// printf("no calibration in simulation: get_prox_calibrated() is equivalent to get_prox()\n");
-// }
 void calibrate_prox()
 {
   int       i, j;
@@ -160,7 +160,7 @@ void calibrate_prox()
   for (i = 0; i<PROX_SENSORS_COUNT; i++)
   {
     prox_corr[i] = prox_corr[i] / NBR_CALIB;
-    printf("%d ", prox_corr[i]);
+    printf("%f ", prox_corr[i]);
   }
 
   for (i = 0; i<LED_COUNT; i++)
@@ -170,10 +170,6 @@ void calibrate_prox()
 
   printf(" done calibration\n");
 } /* calibrate_prox */
-
-const char *light_sensors_names[PROX_SENSORS_COUNT] =
-{"ls0", "ls1", "ls2", "ls3", "ls4", "ls5", "ls6", "ls7"};
-WbDeviceTag light_sensor_tags[PROX_SENSORS_COUNT];
 
 void init_light()
 {
@@ -189,7 +185,6 @@ void init_light()
 
 void calibrate_light()
 {
-<<<<<<< HEAD
   printf("no calibration in simulation: get_light_calibrated() is equivalent to get_light()\n");
 }
 
@@ -197,11 +192,7 @@ void get_light(short int *light_values)
 {
   int i;
 
-  // printf("%f\n",wb_light_sensor_get_value(light_sensor_tags[3]));
   for (i = 0; i<PROX_SENSORS_COUNT; i++)
-=======
-  for (int i = 0; i<PROX_SENSORS_COUNT; i++)
->>>>>>> Now defining global vars as extern in the header files as it should be.
   {
     light_values[i] = wb_light_sensor_get_value(light_sensor_tags[i]);
   }
