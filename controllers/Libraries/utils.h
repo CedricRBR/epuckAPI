@@ -3,11 +3,10 @@
 // ! declares multiple utility functions
 //
 // ------------------------------------------------------------------------------
+
 #ifndef _UTILS_H_
 #define _UTILS_H_
 
-#include "../API/epuck/epuckAPI.h"
-#include <math.h>
 #include <stdio.h>
 
 #define STEPS_PER_REVOLUTION 20.0          // !< steps per motor revolution
@@ -45,7 +44,7 @@ float toMM(int steps);
  *  \param speed the velocity of the outer wheel of the robot
  *  \return void
  **/
-void  turn ( float radius, int dir, float speed);
+void turn ( float radius, int dir, float speed);
 
 /**
  *  calculates the distance travelled by the robot.
@@ -75,13 +74,13 @@ char* format_time(char *output);
  *
  *  f the csv file
  **/
-void  printData(FILE* f);
+void printData(FILE* f);
 
 /**
  *  print the header to a csv file
  *
  *  f pointer to the file
  **/
-void  printHeader(FILE* f);
+void printHeader(FILE* f);
 
 #endif /* ifndef _UTILS_H_ */

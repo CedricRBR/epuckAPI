@@ -1,5 +1,8 @@
 #include "utils.h"
 
+#include "../API/epuck/epuckAPI.h"
+#include <math.h>
+
 float toSteps(float mm)
 {
   return (mm / WHEEL_CIRCUMFERENCE) * REDUCTION * STEPS_PER_REVOLUTION;
@@ -15,36 +18,54 @@ void turn ( float radius, int dir, float speed)
   int spd = speed * (radius - DIST_CENTER_WHEEL) / ( DIST_CENTER_WHEEL + radius);
 
   if(dir)
+  {
     set_speed(speed, spd);
+  }
   else
+  {
     set_speed(spd, speed);
+  }
 
   return; // DEBUG
 
   if(radius == 0)
   {
     if(dir)
+    {
       set_speed(speed, -speed);
+    }
     else
+    {
       set_speed(-speed, speed);
+    }
   }
   else if(radius<=DIST_CENTER_WHEEL)
   {
     float fwd = 1;
     float rev = (1.0 - radius / DIST_CENTER_WHEEL);
+
     if(dir)
+    {
       set_speed(speed * fwd, speed * rev);
+    }
     else
+    {
       set_speed(speed * rev, speed * fwd);
+    }
   }
   else
   {
     float big   = 1;
     float small = 1 - WHEEL_DIST / radius;
+
     if(dir)
+    {
       set_speed(speed * big, speed * small);
+    }
     else
+    {
       set_speed(speed * small, speed * big);
+    }
   }
 } /* turn */
 
@@ -103,6 +124,7 @@ void printHeader(FILE* f)
   fprintf(f, "magX,magY,magZ,");
   fprintf(f, "temp,");
   int i;
+
   for(i = 0; i<PROX_SENSORS_COUNT; ++i)
   {
     fprintf(f, "prox%i,", i);
@@ -114,6 +136,7 @@ void printHeader(FILE* f)
   }
 
   fprintf(f, "ToF,");
+
   for(i = 0; i<MICROPHONE_COUNT; ++i)
   {
     fprintf(f, "mic%i,", i);

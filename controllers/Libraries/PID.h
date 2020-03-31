@@ -7,15 +7,8 @@
 
 #ifndef PID_H
 #define PID_H
-#include <stdint.h>
-#include <stdio.h>
 
-#if SIMULATION
-#include "../API/webots/webotsAPI.h"
-#else
-#include "../API/epuck/epuckAPI.h"
-#include <sys/time.h>
-#endif
+#include <stdio.h>
 
 struct pid_controller
 {

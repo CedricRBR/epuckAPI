@@ -6,6 +6,15 @@
 
 #include "PID.h"
 
+#include <stdint.h>
+
+#if SIMULATION
+#include "../API/webots/webotsAPI.h"
+#else
+#include "../API/epuck/epuckAPI.h"
+#include <sys/time.h>
+#endif
+
 long long get_millis()
 {
   struct timeval tv;

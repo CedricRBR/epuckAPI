@@ -1,4 +1,12 @@
-#include "empty_controller.h"
+#include "S01_empty_controller.h"
+
+#define SIMULATION 0
+
+#if SIMULATION
+#include "../API/webots/webotsAPI.h"
+#else
+#include "../API/epuck/epuckAPI.h"
+#endif
 
 void robot_setup()
 {
@@ -10,6 +18,7 @@ void robot_loop()
 
   while (robot_go_on())
   {}
+
   cleanup_robot();
 }
 

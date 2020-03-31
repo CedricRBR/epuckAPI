@@ -1,5 +1,13 @@
 #include "S01_basic_lover.h"
 
+#define SIMULATION 0
+
+#if SIMULATION
+#include "../API/webots/webotsAPI.h"
+#else
+#include "../API/epuck/epuckAPI.h"
+#endif
+
 void robot_setup()
 {
   init_robot();
@@ -25,6 +33,7 @@ void robot_loop()
     // make sure speed values are legal
     set_speed(bounded_speed(speed), bounded_speed(speed));
   }
+
   cleanup_robot();
 } /* robot_loop */
 
