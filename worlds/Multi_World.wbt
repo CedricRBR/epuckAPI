@@ -20,75 +20,63 @@ DEF LIGHTS Group {
     Group {
       children [
         PointLight {
-          ambientIntensity 0.3
-          intensity 0.2
-          location -0.4 0.4 0.5
+          attenuation 0 0 12.56
+          location -0.4 0.4 0.8
         }
         PointLight {
-          ambientIntensity 0.3
-          intensity 0.2
-          location 0 0.4 0.5
+          attenuation 0 0 12.56
+          location 0 0.4 0.8
         }
         PointLight {
-          ambientIntensity 0.3
-          intensity 0.2
-          location 0.4 0.4 0.5
+          attenuation 0 0 12.56
+          location 0.4 0.4 0.8
         }
       ]
     }
     Group {
       children [
         PointLight {
-          ambientIntensity 0.2
-          intensity 0.1
-          location -0.4 0.4 0.25
+          attenuation 0 0 12.56
+          location -0.4 0.4 0.4
         }
         PointLight {
-          ambientIntensity 0.2
-          intensity 0.1
-          location 0 0.4 0.25
+          attenuation 0 0 12.56
+          location 0 0.4 0.4
         }
         PointLight {
-          ambientIntensity 0.2
-          intensity 0.1
-          location 0.4 0.4 0.25
+          attenuation 0 0 12.56
+          location 0.4 0.4 0.4
         }
       ]
     }
     Group {
       children [
         PointLight {
-          ambientIntensity 0.3
-          intensity 0.1
-          location -0.4 0.4 0.5
+          attenuation 0 0 12.56
+          location -0.4 0.4 0.8
         }
         PointLight {
-          ambientIntensity 0.3
-          intensity 0.1
-          location 0 0.4 0.5
+          attenuation 0 0 12.56
+          location 0 0.4 0.8
         }
         PointLight {
-          ambientIntensity 0.3
-          intensity 0.1
-          location 0.4 0.4 0.5
+          attenuation 0 0 12.56
+          location 0.4 0.4 0.8
         }
       ]
     }
     Group {
       children [
         PointLight {
-          ambientIntensity 0.2
-          intensity 0.1
+          attenuation 0 0 12.56
           location -0.4 0.4 0
         }
         PointLight {
-          ambientIntensity 0.2
-          intensity 0.1
+          attenuation 0 0 12.56
           location 0 0.4 0
         }
         PointLight {
-          ambientIntensity 0.2
-          intensity 0.1
+          attenuation 0 0 12.56
           location 0.4 0.4 0
         }
       ]
@@ -96,38 +84,32 @@ DEF LIGHTS Group {
     Group {
       children [
         PointLight {
-          ambientIntensity 0.2
-          intensity 0.1
-          location -0.4 0.4 -0.25
+          attenuation 0 0 12.56
+          location -0.4 0.4 -0.4
         }
         PointLight {
-          ambientIntensity 0.2
-          intensity 0.1
-          location 0 0.4 -0.25
+          attenuation 0 0 12.56
+          location 0 0.4 -0.4
         }
         PointLight {
-          ambientIntensity 0.2
-          intensity 0.1
-          location 0.4 0.4 -0.25
+          attenuation 0 0 12.56
+          location 0.4 0.4 -0.4
         }
       ]
     }
     Group {
       children [
         PointLight {
-          ambientIntensity 0.3
-          intensity 0.2
-          location -0.4 0.4 -0.5
+          attenuation 0 0 12.56
+          location -0.4 0.4 -0.8
         }
         PointLight {
-          ambientIntensity 0.3
-          intensity 0.2
-          location 0 0.4 -0.5
+          attenuation 0 0 12.56
+          location 0 0.4 -0.8
         }
         PointLight {
-          ambientIntensity 0.3
-          intensity 0.2
-          location 0.4 0.4 -0.5
+          attenuation 0 0 12.56
+          location 0.4 0.4 -0.8
         }
       ]
     }

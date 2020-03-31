@@ -1,4 +1,4 @@
-#VRML_SIM R2019a utf8
+#VRML_SIM R2020a utf8
 WorldInfo {
   info [
     "The model of the E-puck robot"
@@ -8,7 +8,8 @@ WorldInfo {
 Viewpoint {
   fieldOfView 0.7
   orientation 1 0 0 4.71238898038469
-  position 0.0007471779990883019 2.2679864630623103 3.884429628549351e-06
+  position 0.020397076479171286 1.500399862712594 -0.027460238821774997
+  follow "e-puck0"
 }
 Background {
   skyColor [
@@ -116,30 +117,30 @@ DEF LIGHTS Group {
   ]
 }
 RectangleArena {
-  floorSize 0.6 0.8
+  floorSize 0.8 1.6
+  floorTileSize 0.8 1.6
   floorAppearance Appearance {
-    material Material {
-    }
     texture ImageTexture {
       url [
         "textures/floor.png"
       ]
-      repeatS FALSE
-      repeatT FALSE
     }
   }
   wallAppearance Appearance {
-    material Material {
-    }
     texture ImageTexture {
       url [
         "textures/wall.png"
       ]
     }
   }
+  floorTextureUrl []
+  wallTextureUrl []
 }
 E-puck {
-  controller "S01_forward_backward"
+  translation -0.00285857956279054 0 -0.1964066083087184
+  rotation 0 -1 0 7.884953353001448e-08
+  name "e-puck0"
+  controller "APItest"
   version "2"
   camera_width 160
   camera_height 120
@@ -147,4 +148,36 @@ E-puck {
     E-puckGroundSensors {
     }
   ]
+}
+SolidBox {
+  translation -0.01995510312117133 0.05 -0.6699680557468219
+  rotation 0 1 0 3.141496322
+  size 0.1 0.1 0.02
+  appearance Appearance {
+    material Material {
+      diffuseColor 0.8 0.3 0.3
+    }
+  }
+}
+SolidBox {
+  translation -0.020070701028744288 0.05 0.530031938685313
+  rotation 0 1 0 3.141496322
+  name "box(1)"
+  size 0.1 0.1 0.02
+  appearance Appearance {
+    material Material {
+      diffuseColor 0.3 0.3 0.8
+    }
+  }
+}
+SolidBox {
+  translation -0.32002253384181745 0.05 0.030003040089894687
+  rotation 0 1 0 4.712292644000001
+  name "box(2)"
+  size 0.1 0.1 0.02
+  appearance Appearance {
+    material Material {
+      diffuseColor 0.3 0.8 0.3
+    }
+  }
 }

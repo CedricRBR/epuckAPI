@@ -78,8 +78,11 @@
 extern WbDeviceTag  left_motor;                                 // !< left motor
 extern WbDeviceTag  right_motor;                                // !< right motor
 
-extern const char * led_names[LED_COUNT];                       // !< led names
-extern WbDeviceTag  led_tags[LED_COUNT];                        // !< Webots led link
+extern const char * led_names[LED_COUNT + 2];                   // !< LED names
+extern WbDeviceTag  led_tags[LED_COUNT + 2];                    // !< Webots LED link
+
+extern const char * rgbled_names[LED_COUNT];                    // !< RGB LED names
+extern WbDeviceTag  rgbled_tags[LED_COUNT];                     // !< Webots RGB LED link
 
 extern const char * prox_sensors_names[PROX_SENSORS_COUNT];     // !< proximity sensor names
 extern WbDeviceTag  prox_sensor_tags[PROX_SENSORS_COUNT];       // !< proximity sensor webots link
@@ -155,6 +158,49 @@ void enable_led(int led_position);
  *  \return void
  **/
 void disable_led(int led_position);
+
+/**
+ *  turn the body LED on
+ *
+ *  \return void
+ **/
+void enable_body_led(void);
+
+/**
+ *  turn the body LED off
+ *
+ *  \return void
+ **/
+void disable_body_led(void);
+
+/**
+ *  turn the front LED on
+ *
+ *  \return void
+ **/
+void enable_front_led(void);
+
+/**
+ *  turn the front LED off
+ *
+ *  \return void
+ **/
+void disable_front_led(void);
+
+/**
+ *  turn a given RGB LED on
+ *
+ *  \param led_position the index of the RGB LED to turn on
+ *  \param led_color an RRGGBB formatted color
+ **/
+void enable_rgbled(int led_position, int led_color);
+
+/**
+ *  turn a given RGB LED off
+ *
+ *  \param led_position the index o the RGB LED to turn off
+ **/
+void disable_rgbled(int led_position);
 
 /**
  *  Initialise proximity sensors
