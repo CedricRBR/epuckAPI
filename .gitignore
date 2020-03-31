@@ -50,3 +50,9 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+#non-API related files
+controllers/S*E*
+worlds/S*E*
+worlds/.S*E*
+.DS_Store
